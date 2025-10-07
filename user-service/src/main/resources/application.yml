@@ -1,0 +1,10 @@
+server:
+  port: 8081  # Unique port for this service
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/ecommerce_users
+    username: macm58
+    password: postgres
+  jpa:
+    hibernate:
+      ddl-auto: update  # For dev; use migrations in prod
