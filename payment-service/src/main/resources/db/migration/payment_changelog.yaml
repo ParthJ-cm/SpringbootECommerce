@@ -1,0 +1,82 @@
+  databaseChangeLog:
+    - changeSet:
+        id: 1
+        author: admin
+        changes:
+          - createTable:
+              tableName: Payments
+              columns:
+                - column:
+                    name: payment_id
+                    type: BIGINT
+                    autoIncrement: true
+                    constraints:
+                      primaryKey: true
+                - column:
+                    name: order_id
+                    type: BIGINT
+                    constraints:
+                      nullable: false
+                      # No FK to Orders (in order_db)
+                - column:
+                    name: user_id
+                    type: BIGINT
+                    constraints:
+                      nullable: false
+                      # No FK to Users (in user_db)
+                - column:
+                    name: amount
+                    type: DECIMAL(10,2)
+                    constraints:
+                      nullable: false
+                - column:
+                    name: status
+                    type: VARCHAR(50)
+                    constraints:
+                      nullable: false
+                - column:
+                    name: payment_method
+                    type: VARCHAR(50)
+                    constraints:
+                      nullable: false
+                - column:
+                    name: transaction_id
+                    type: VARCHAR(100)
+                    constraints:
+                      unique: true
+                      nullable: false
+                - column:
+                    name: created_at
+                    type: TIMESTAMP
+                    defaultValueComputed: CURRENT_TIMESTAMP
+                - column:
+                    name: updated_at
+                    type: TIMESTAMP
+                    defaultValueComputed: CURRENT_TIMESTAMP
+                - column:
+                    name: created_by
+                    type: BIGINT
+                - column:
+                    name: updated_by
+                    type: BIGINT
+          - createIndex:
+              tableName: Payments
+              indexName: idx_payments_order_id
+              columns:
+                - column:
+                    name: order_id
+          - createIndex:
+              tableName: Payments
+              indexName: idx_payments_user_id
+              columns:
+                - column:
+                    name: user_id
+          - createIndex:
+              tableName: Payments
+              indexName: idx_payments_status
+              columns:
+                - column:
+                    name: status
+          - addUniqueConstraint:
+              tableName: Payments
+              columnNames: order_id

@@ -1,0 +1,207 @@
+databaseChangeLog:
+  - changeSet:
+      id: 1
+      author: admin
+      changes:
+        - createTable:
+            tableName: Categories
+            columns:
+              - column:
+                  name: category_id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+              - column:
+                  name: name
+                  type: VARCHAR(100)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: description
+                  type: TEXT
+              - column:
+                  name: parent_id
+                  type: BIGINT
+              - column:
+                  name: created_at
+                  type: TIMESTAMP
+                  defaultValueComputed: CURRENT_TIMESTAMP
+              - column:
+                  name: updated_at
+                  type: TIMESTAMP
+                  defaultValueComputed: CURRENT_TIMESTAMP
+              - column:
+                  name: created_by
+                  type: BIGINT
+              - column:
+                  name: updated_by
+                  type: BIGINT
+        - createIndex:
+            tableName: Categories
+            indexName: idx_categories_name
+            columns:
+              - column:
+                  name: name
+        - createIndex:
+            tableName: Categories
+            indexName: idx_categories_parent_id
+            columns:
+              - column:
+                  name: parent_id
+  - changeSet:
+      id: 2
+      author: admin
+      changes:
+        - createTable:
+            tableName: Products
+            columns:
+              - column:
+                  name: product_id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+              - column:
+                  name: name
+                  type: VARCHAR(200)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: description
+                  type: TEXT
+              - column:
+                  name: price
+                  type: DECIMAL(10,2)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: stock_quantity
+                  type: INT
+                  constraints:
+                    nullable: false
+                    defaultValue: 0
+              - column:
+                  name: sku
+                  type: VARCHAR(50)
+                  constraints:
+                    unique: true
+              - column:
+                  name: image_url
+                  type: VARCHAR(255)
+              - column:
+                  name: vendor_id
+                  type: BIGINT
+                  constraints:
+                    # No FK to Users (in user_db)
+                    nullable: false
+              - column:
+                  name: created_at
+                  type: TIMESTAMP
+                  defaultValueComputed: CURRENT_TIMESTAMP
+              - column:
+                  name: updated_at
+                  type: TIMESTAMP
+                  defaultValueComputed: CURRENT_TIMESTAMP
+              - column:
+                  name: is_active
+                  type: BOOLEAN
+                  defaultValueBoolean: true
+              - column:
+                  name: created_by
+                  type: BIGINT
+              - column:
+                  name: updated_by
+                  type: BIGINT
+        - createIndex:
+            tableName: Products
+            indexName: idx_products_name
+            columns:
+              - column:
+                  name: name
+        - createIndex:
+            tableName: Products
+            indexName: idx_products_price
+            columns:
+              - column:
+                  name: price
+        - createIndex:
+            tableName: Products
+            indexName: idx_products_stock_quantity
+            columns:
+              - column:
+                  name: stock_quantity
+  - changeSet:
+      id: 3
+      author: admin
+      changes:
+        - createTable:
+            tableName: Product_Categories
+            columns:
+              - column:
+                  name: product_id
+                  type: BIGINT
+              - column:
+                  name: category_id
+                  type: BIGINT
+  - changeSet:
+      id: 4
+      author: admin
+      changes:
+        - createTable:
+            tableName: Reviews
+            columns:
+              - column:
+                  name: review_id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+              - column:
+                  name: product_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: user_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+                    # No FK to Users (in user_db)
+              - column:
+                  name: rating
+                  type: INT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: comment
+                  type: TEXT
+              - column:
+                  name: created_at
+                  type: TIMESTAMP
+                  defaultValueComputed: CURRENT_TIMESTAMP
+              - column:
+                  name: updated_at
+                  type: TIMESTAMP
+                  defaultValueComputed: CURRENT_TIMESTAMP
+              - column:
+                  name: created_by
+                  type: BIGINT
+              - column:
+                  name: updated_by
+                  type: BIGINT
+        - createIndex:
+            tableName: Reviews
+            indexName: idx_reviews_product_id
+            columns:
+              - column:
+                  name: product_id
+        - createIndex:
+            tableName: Reviews
+            indexName: idx_reviews_user_id
+            columns:
+              - column:
+                  name: user_id
+        - addUniqueConstraint:
+            tableName: Reviews
+            columnNames: product_id, user_id
