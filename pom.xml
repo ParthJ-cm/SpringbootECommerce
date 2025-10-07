@@ -11,7 +11,8 @@
 	<groupId>com.shop</groupId>
 	<artifactId>ecommerce</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>ecommerce</name>
+    <packaging>pom</packaging>
+    <name>ecommerce</name>
 	<description>eCommerce project for Spring Boot</description>
 	<url/>
 	<licenses>
@@ -20,7 +21,15 @@
 	<developers>
 		<developer/>
 	</developers>
-	<scm>
+    <modules>
+        <module>product-service</module>
+        <module>order-service</module>
+        <module>cart-service</module>
+        <module>user-service</module>
+        <module>service-discovery</module>
+        <module>api-gateway</module>
+    </modules>
+    <scm>
 		<connection/>
 		<developerConnection/>
 		<tag/>
