@@ -159,3 +159,5 @@
               columns:
                 - column:
                     name: product_id
+    - include:
+        file: db/migration/user/user_changelog_add_fks.yaml
