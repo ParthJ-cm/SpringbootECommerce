@@ -1,0 +1,12 @@
+databaseChangeLog:
+  - changeSet:
+      id: 3
+      author: admin
+      changes:
+        - addForeignKeyConstraint:
+            constraintName: fk_cart_items_cart_id
+            baseTableName: Cart_Items
+            baseColumnNames: cart_id
+            referencedTableName: Carts
+            referencedColumnNames: cart_id
+            onDelete: CASCADE

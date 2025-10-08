@@ -85,3 +85,5 @@
               columns:
                 - column:
                     name: product_id
+    - include:
+        file: db/migration/cart_changelog_add_fks.yaml
