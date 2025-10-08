@@ -1,5 +1,6 @@
 package com.shop.user_service.config;
 
+import com.shop.user_service.security.CustomOAuth2UserService;
 import com.shop.user_service.security.JWTAuthFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -20,23 +21,26 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 public class WebSecurityConfig {
 
     private final JWTAuthFilter jwtAuthFilter;
+    private final CustomOAuth2UserService customOAuth2UserService;
 
     @Bean
-    SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
+    public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
         httpSecurity
                 .authorizeHttpRequests(auth ->
                         auth
-                                .requestMatchers("/endpoint", "/error", "/auth/**").permitAll()   // Public endpoints
-                                .anyRequest().authenticated())  // All other requests require authentication
-                .csrf(csrfConfig ->  // Disable CSRF for simplicity, not recommended for production
-                        csrfConfig
-                                .disable())
-                .sessionManagement(sessionConfig ->   // Disable JSESSIONID for simplicity, not recommended for production
-                        sessionConfig
-                                .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class); //add the filter just before of the ther usernamepasswordauthenticationfilter
+                                .requestMatchers("/auth/**", "/login/**", "/oauth2/**", "/error").permitAll()
+                                .anyRequest().authenticated()
+                )
+                .csrf(csrf -> csrf.disable())
+                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
+                .oauth2Login(oauth2 -> oauth2
+                        .defaultSuccessUrl("http://localhost:5173/dashboard", true) // Redirect to frontend dashboard
+                        .failureUrl("/login?error")
+                        .userInfoEndpoint(userInfo -> userInfo.userService(customOAuth2UserService))
+                );
 
-        return httpSecurity.build();   //when you add build this throws an exception
+        return httpSecurity.build();
     }
 
     @Bean
@@ -48,5 +52,12 @@ public class WebSecurityConfig {
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
+
+    @Bean
+    public CustomOAuth2UserService customUserService() {
+        return new CustomOAuth2UserService();
+    }
+
+
 
 }

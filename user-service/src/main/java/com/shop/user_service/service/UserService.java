@@ -73,5 +73,18 @@ public class UserService {
 
     }
 
+    public User findOrCreateUser(String email, String name) {
+        Optional<User> existingUser = repository.findByEmail(email);
+        if (existingUser.isPresent()) {
+            return existingUser.get();
+        }
+        User newUser = new User();
+        newUser.setEmail(email);
+        newUser.setName(name);
+        newUser.setPassword(passwordEncoder.encode("oauth2-default-password")); // Optional, can be null
+        newUser.setRole("USER");
+        return repository.save(newUser);
+    }
+
 
 }
