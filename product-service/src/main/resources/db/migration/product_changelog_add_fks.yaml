@@ -1,0 +1,23 @@
+databaseChangeLog:
+  - changeSet:
+        id: 5
+        author: admin
+        changes:
+          - addPrimaryKey:
+              tableName: Product_Categories
+              columnNames: product_id, category_id
+              constraintName: Product_Categories_pkey
+          - addForeignKeyConstraint:
+              constraintName: fk_product_categories_product_id
+              baseTableName: Product_Categories
+              baseColumnNames: product_id
+              referencedTableName: Products
+              referencedColumnNames: product_id
+              onDelete: CASCADE
+          - addForeignKeyConstraint:
+              constraintName: fk_product_categories_category_id
+              baseTableName: Product_Categories
+              baseColumnNames: category_id
+              referencedTableName: Categories
+              referencedColumnNames: category_id
+              onDelete: CASCADE
