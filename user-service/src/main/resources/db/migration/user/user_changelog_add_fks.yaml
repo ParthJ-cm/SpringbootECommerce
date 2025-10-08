@@ -1,0 +1,19 @@
+  databaseChangeLog:
+    - changeSet:
+        id: 4
+        author: admin
+        changes:
+          - addForeignKeyConstraint:
+              constraintName: fk_wishlists_user_id
+              baseTableName: Wishlists
+              baseColumnNames: user_id
+              referencedTableName: Users
+              referencedColumnNames: user_id
+              onDelete: CASCADE
+          - addForeignKeyConstraint:
+              constraintName: fk_wishlist_items_wishlist_id
+              baseTableName: Wishlist_Items
+              baseColumnNames: wishlist_id
+              referencedTableName: Wishlists
+              referencedColumnNames: wishlist_id
+              onDelete: CASCADE
