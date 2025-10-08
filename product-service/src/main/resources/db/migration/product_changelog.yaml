@@ -4,7 +4,7 @@
         author: admin
         changes:
           - createTable:
-              tableName: Categories
+              tableName: categories
               columns:
                 - column:
                     name: category_id
@@ -38,13 +38,13 @@
                     name: updated_by
                     type: BIGINT
           - createIndex:
-              tableName: Categories
+              tableName: categories
               indexName: idx_categories_name
               columns:
                 - column:
                     name: name
           - createIndex:
-              tableName: Categories
+              tableName: categories
               indexName: idx_categories_parent_id
               columns:
                 - column:
@@ -54,7 +54,7 @@
         author: admin
         changes:
           - createTable:
-              tableName: Products
+              tableName: products
               columns:
                 - column:
                     name: product_id
@@ -114,19 +114,19 @@
                     name: updated_by
                     type: BIGINT
           - createIndex:
-              tableName: Products
+              tableName: products
               indexName: idx_products_name
               columns:
                 - column:
                     name: name
           - createIndex:
-              tableName: Products
+              tableName: products
               indexName: idx_products_price
               columns:
                 - column:
                     name: price
           - createIndex:
-              tableName: Products
+              tableName: products
               indexName: idx_products_stock_quantity
               columns:
                 - column:
@@ -136,7 +136,7 @@
         author: admin
         changes:
           - createTable:
-              tableName: Product_Categories
+              tableName: product_categories
               columns:
                 - column:
                     name: product_id
@@ -149,7 +149,7 @@
         author: admin
         changes:
           - createTable:
-              tableName: Reviews
+              tableName: reviews
               columns:
                 - column:
                     name: review_id
@@ -191,19 +191,19 @@
                     name: updated_by
                     type: BIGINT
           - createIndex:
-              tableName: Reviews
+              tableName: reviews
               indexName: idx_reviews_product_id
               columns:
                 - column:
                     name: product_id
           - createIndex:
-              tableName: Reviews
+              tableName: reviews
               indexName: idx_reviews_user_id
               columns:
                 - column:
                     name: user_id
           - addUniqueConstraint:
-              tableName: Reviews
+              tableName: reviews
               columnNames: product_id, user_id
     - include:
         file: db/migration/product_changelog_add_fks.yaml
