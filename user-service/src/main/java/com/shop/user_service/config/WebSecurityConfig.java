@@ -1,7 +1,12 @@
 package com.shop.user_service.config;
 
+import com.shop.user_service.Entity.User;
+import com.shop.user_service.repository.UserRepository;
+import com.shop.user_service.security.CustomOAuth2User;
 import com.shop.user_service.security.CustomOAuth2UserService;
 import com.shop.user_service.security.JWTAuthFilter;
+import com.shop.user_service.security.OAuth2SuccessHandler;
+import com.shop.user_service.service.JWTService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -12,6 +17,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
@@ -22,6 +28,9 @@ public class WebSecurityConfig {
 
     private final JWTAuthFilter jwtAuthFilter;
     private final CustomOAuth2UserService customOAuth2UserService;
+    private final JWTService jwtService;
+    private final UserRepository userRepository;
+    private final OAuth2SuccessHandler oAuth2SuccessHandler;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
@@ -34,11 +43,16 @@ public class WebSecurityConfig {
                 .csrf(csrf -> csrf.disable())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
-                .oauth2Login(oauth2 -> oauth2
-                        .defaultSuccessUrl("http://localhost:5173/dashboard", true) // Redirect to frontend dashboard
-                        .failureUrl("/login?error")
-                        .userInfoEndpoint(userInfo -> userInfo.userService(customOAuth2UserService))
+                .oauth2Login(oauth2Config->oauth2Config
+                        .failureUrl("/login?error=true")
+                        .successHandler(oAuth2SuccessHandler)  // to handle the error
                 );
+
+
+
+
+
+
 
         return httpSecurity.build();
     }
@@ -53,10 +67,7 @@ public class WebSecurityConfig {
         return new BCryptPasswordEncoder();
     }
 
-    @Bean
-    public CustomOAuth2UserService customUserService() {
-        return new CustomOAuth2UserService();
-    }
+
 
 
 

@@ -48,23 +48,5 @@ public class UserController {
        return ResponseEntity.ok(loginResponseDto);
     }
 
-    @GetMapping("/oauth2/success")
-    public void handleOAuth2Success(@AuthenticationPrincipal OAuth2User oAuth2User, HttpServletResponse response) throws IOException, IOException {
-        System.out.println("OAuth2 User: " + oAuth2User);
-        if (oAuth2User == null) {
-            throw new IllegalStateException("OAuth2User is null. Check security context or OAuth2 configuration.");
-        }
-        Map<String, Object> attributes = oAuth2User.getAttributes();
-        System.out.println("OAuth2 Attributes: " + attributes);
-        String email = (String) attributes.get("email");
-        String name = (String) attributes.get("name");
-        if (email == null || name == null) {
-            throw new IllegalArgumentException("Email or name not found in OAuth2 user attributes: " + attributes);
-        }
-        User user = service.findOrCreateUser(email, name);
-        String accessToken = jwtService.createToken(user);
-        String refreshToken = jwtService.createRefreshToken(user);
-        String redirectUrl = "http://localhost:5173/login?accessToken=" + accessToken + "&refreshToken=" + refreshToken;
-        response.sendRedirect(redirectUrl);
-    }
+
 }
