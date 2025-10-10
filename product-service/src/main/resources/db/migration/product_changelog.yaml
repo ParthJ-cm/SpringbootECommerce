@@ -73,8 +73,6 @@
                 - column:
                     name: price
                     type: DECIMAL(10,2)
-                    constraints:
-                      nullable: false
                 - column:
                     name: stock_quantity
                     type: INT
@@ -205,5 +203,31 @@
           - addUniqueConstraint:
               tableName: reviews
               columnNames: product_id, user_id
+    - changeSet:
+        id: 6
+        author: admin
+        changes:
+          - createTable:
+                tableName: product_attributes
+                columns:
+                  - column:
+                      name: product_attribute_id
+                      type: BIGINT
+                      autoIncrement: true
+                      constraints:
+                        primaryKey: true
+                  - column:
+                      name: product_id
+                      type: BIGINT
+                      constraints:
+                        nullable: false
+                  - column:
+                      name: attribute_name
+                      type: VARCHAR(100)
+                      constraints:
+                        nullable: false
+                  - column:
+                      name: attribute_price
+                      type: DECIMAL(10,2)
     - include:
         file: db/migration/product_changelog_add_fks.yaml

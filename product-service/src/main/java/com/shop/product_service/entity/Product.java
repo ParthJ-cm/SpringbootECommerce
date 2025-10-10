@@ -26,7 +26,7 @@ public class Product {
     @Column(name = "description")
     private String description;
 
-    @Column(name = "price", nullable = false)
+    @Column(name = "price")
     private BigDecimal price;
 
     @Column(name = "stock_quantity", nullable = false)
@@ -63,4 +63,7 @@ public class Product {
             inverseJoinColumns = @JoinColumn(name = "category_id")
     )
     private List<Category> categories = new ArrayList<>();
+
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<ProductAttribute> attributes = new ArrayList<>();
 }

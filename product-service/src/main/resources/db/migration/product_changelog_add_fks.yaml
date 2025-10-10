@@ -21,3 +21,10 @@ databaseChangeLog:
               referencedTableName: categories
               referencedColumnNames: category_id
               onDelete: CASCADE
+          - addForeignKeyConstraint:
+              constraintName: fk_product_attributes_product_id
+              baseTableName: product_attributes
+              baseColumnNames: product_id
+              referencedTableName: products
+              referencedColumnNames: product_id
+              onDelete: CASCADE

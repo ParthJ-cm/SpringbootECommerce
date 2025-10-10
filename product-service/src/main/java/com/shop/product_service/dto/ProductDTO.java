@@ -23,4 +23,5 @@ public class ProductDTO {
     private Long createdBy;
     private Long updatedBy;
     private List<Long> categoryIds;
+    private List<AttributeDTO> attributes;
 }
