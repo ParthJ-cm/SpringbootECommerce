@@ -5,8 +5,8 @@ databaseChangeLog:
       changes:
         - addForeignKeyConstraint:
             constraintName: fk_cart_items_cart_id
-            baseTableName: Cart_Items
+            baseTableName: cart_item
             baseColumnNames: cart_id
-            referencedTableName: Carts
+            referencedTableName: cart
             referencedColumnNames: cart_id
             onDelete: CASCADE

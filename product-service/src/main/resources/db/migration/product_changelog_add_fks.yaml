@@ -4,20 +4,27 @@ databaseChangeLog:
         author: admin
         changes:
           - addPrimaryKey:
-              tableName: Product_Categories
+              tableName: product_categories
               columnNames: product_id, category_id
               constraintName: Product_Categories_pkey
           - addForeignKeyConstraint:
               constraintName: fk_product_categories_product_id
-              baseTableName: Product_Categories
+              baseTableName: product_categories
               baseColumnNames: product_id
-              referencedTableName: Products
+              referencedTableName: products
               referencedColumnNames: product_id
               onDelete: CASCADE
           - addForeignKeyConstraint:
               constraintName: fk_product_categories_category_id
-              baseTableName: Product_Categories
+              baseTableName: product_categories
               baseColumnNames: category_id
-              referencedTableName: Categories
+              referencedTableName: categories
               referencedColumnNames: category_id
+              onDelete: CASCADE
+          - addForeignKeyConstraint:
+              constraintName: fk_product_attributes_product_id
+              baseTableName: product_attributes
+              baseColumnNames: product_id
+              referencedTableName: products
+              referencedColumnNames: product_id
               onDelete: CASCADE
