@@ -28,7 +28,8 @@ public class CartService {
         return cartRepository.findAllCartsWithItems()
                 .stream()
                 .map(cartMapper::toDto)
-                .collect(Collectors.toList());
+                .collect(
+                        Collectors.toList());
     }
 
     public boolean deleteCart(Long id) {
