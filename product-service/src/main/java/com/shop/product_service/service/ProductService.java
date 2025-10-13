@@ -133,6 +133,13 @@ public class ProductService {
         productRepository.delete(product);
     }
 
+    public List<ProductDTO> getProductsByCategoryId(Long categoryId) {
+        List<Product> products = productRepository.findByCategories_CategoryId(categoryId);
+        return products.stream()
+                .map(this::mapToDTO)
+                .collect(Collectors.toList());
+    }
+
     private ProductDTO mapToDTO(Product product) {
         ProductDTO dto = modelMapper.map(product, ProductDTO.class);
         dto.setCategoryIds(product.getCategories().stream()

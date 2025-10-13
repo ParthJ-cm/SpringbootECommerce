@@ -44,4 +44,10 @@ public class ProductController {
         productService.deleteProduct(productId);
         return ResponseEntity.noContent().build();
     }
+
+    @GetMapping("/category/{categoryId}")
+    public ResponseEntity<List<ProductDTO>> getProductsByCategoryId(@PathVariable Long categoryId) {
+        List<ProductDTO> products = productService.getProductsByCategoryId(categoryId);
+        return ResponseEntity.ok(products);
+    }
 }
