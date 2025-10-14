@@ -1,10 +1,10 @@
   databaseChangeLog:
     - changeSet:
-        id: 1
+        id: 1 # add "users" table
         author: admin
         changes:
           - createTable:
-              tableName: Users
+              tableName: users
               columns:
                 - column:
                     name: user_id
@@ -62,7 +62,7 @@
                     defaultValue: customer
                     constraints:
                       nullable: false
-                      checkConstraint: role IN ('customer', 'admin', 'vendor')
+                      checkConstraint: role IN ('customer', 'admin')
                 - column:
                     name: created_at
                     type: TIMESTAMP
@@ -75,24 +75,30 @@
                     name: is_active
                     type: BOOLEAN
                     defaultValueBoolean: true
+                - column:
+                    name: is_deleted
+                    type: BOOLEAN
+                    defaultValueBoolean: false
+                    constraints:
+                      nullable: false
           - createIndex:
-              tableName: Users
+              tableName: users
               indexName: idx_users_email
               columns:
                 - column:
                     name: email
           - createIndex:
-              tableName: Users
+              tableName: users
               indexName: idx_users_username
               columns:
                 - column:
                     name: username
     - changeSet:
-        id: 2
+        id: 2 # add "wishlists" table
         author: admin
         changes:
           - createTable:
-              tableName: Wishlists
+              tableName: wishlists
               columns:
                 - column:
                     name: wishlist_id
@@ -114,17 +120,17 @@
                     type: TIMESTAMP
                     defaultValueComputed: CURRENT_TIMESTAMP
           - createIndex:
-              tableName: Wishlists
+              tableName: wishlists
               indexName: idx_wishlists_user_id
               columns:
                 - column:
                     name: user_id
     - changeSet:
-        id: 3
+        id: 3 # add "wishlist_items" table
         author: admin
         changes:
           - createTable:
-              tableName: Wishlist_Items
+              tableName: wishlist_items
               columns:
                 - column:
                     name: wishlist_item_id
@@ -138,25 +144,25 @@
                     constraints:
                       nullable: false
                 - column:
-                    name: product_id
+                    name: product_variant_id
                     type: BIGINT
                     constraints:
                       nullable: false
                       # No FK to Products (in product_db)
                 - addUniqueConstraint:
-                    tableName: Wishlist_Items
-                    columnNames: wishlist_id, product_id
+                    tableName: wishlist_items
+                    columnNames: wishlist_id, product_variant_id
           - createIndex:
-              tableName: Wishlist_Items
+              tableName: wishlist_items
               indexName: idx_wishlist_items_wishlist_id
               columns:
                 - column:
                     name: wishlist_id
           - createIndex:
-              tableName: Wishlist_Items
-              indexName: idx_wishlist_items_product_id
+              tableName: wishlist_items
+              indexName: idx_wishlist_items_product_variant_id
               columns:
                 - column:
-                    name: product_id
+                    name: product_variant_id
     - include:
         file: db/migration/user/user_changelog_add_fks.yaml

@@ -3,10 +3,11 @@ databaseChangeLog:
       id: 3
       author: admin
       changes:
+        # FK "order_id" in "order_items" table
         - addForeignKeyConstraint:
             constraintName: fk_order_items_order_id
-            baseTableName: Order_Items
+            baseTableName: order_items
             baseColumnNames: order_id
-            referencedTableName: Orders
+            referencedTableName: orders
             referencedColumnNames: order_id
             onDelete: CASCADE

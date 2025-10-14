@@ -1,6 +1,6 @@
   databaseChangeLog:
     - changeSet:
-        id: 1
+        id: 1 # add "categories" table
         author: admin
         changes:
           - createTable:
@@ -37,6 +37,12 @@
                 - column:
                     name: updated_by
                     type: BIGINT
+                - column:
+                    name: is_deleted
+                    type: BOOLEAN
+                    defaultValueBoolean: false
+                    constraints:
+                      nullable: false
           - createIndex:
               tableName: categories
               indexName: idx_categories_name
@@ -49,8 +55,54 @@
               columns:
                 - column:
                     name: parent_id
+
     - changeSet:
-        id: 2
+        id: 2 # add "brands" table
+        author: admin
+        changes:
+          - createTable:
+              tableName: brands
+              columns:
+                - column:
+                    name: brand_id
+                    type: BIGINT
+                    autoIncrement: true
+                    constraints:
+                      primaryKey: true
+                - column:
+                    name: name
+                    type: VARCHAR(100)
+                    constraints:
+                      nullable: false
+                - column:
+                    name: description
+                    type: TEXT
+                - column:
+                    name: logo_url
+                    type: VARCHAR(250)
+                - column:
+                    name: created_at
+                    type: TIMESTAMP
+                    defaultValueComputed: CURRENT_TIMESTAMP
+                - column:
+                    name: updated_at
+                    type: TIMESTAMP
+                    defaultValueComputed: CURRENT_TIMESTAMP
+                - column:
+                    name: created_by
+                    type: BIGINT
+                - column:
+                    name: updated_by
+                    type: BIGINT
+                - column:
+                    name: is_deleted
+                    type: BOOLEAN
+                    defaultValueBoolean: false
+                    constraints:
+                      nullable: false
+
+    - changeSet:
+        id: 3 # add "products" table
         author: admin
         changes:
           - createTable:
@@ -88,11 +140,10 @@
                     name: image_url
                     type: VARCHAR(255)
                 - column:
-                    name: vendor_id
+                    name: brand_id
                     type: BIGINT
                     constraints:
                       nullable: false
-                      # No FK to Users (in user_db)
                 - column:
                     name: created_at
                     type: TIMESTAMP
@@ -111,6 +162,12 @@
                 - column:
                     name: updated_by
                     type: BIGINT
+                - column:
+                    name: is_deleted
+                    type: BOOLEAN
+                    defaultValueBoolean: false
+                    constraints:
+                      nullable: false
           - createIndex:
               tableName: products
               indexName: idx_products_name
@@ -129,8 +186,9 @@
               columns:
                 - column:
                     name: stock_quantity
+
     - changeSet:
-        id: 3
+        id: 4 # add "product_categories" table
         author: admin
         changes:
           - createTable:
@@ -142,8 +200,9 @@
                 - column:
                     name: category_id
                     type: BIGINT
+
     - changeSet:
-        id: 4
+        id: 5 # add "reviews" table
         author: admin
         changes:
           - createTable:
@@ -165,7 +224,6 @@
                     type: BIGINT
                     constraints:
                       nullable: false
-                      # No FK to Users (in user_db)
                 - column:
                     name: rating
                     type: INT
@@ -203,8 +261,60 @@
           - addUniqueConstraint:
               tableName: reviews
               columnNames: product_id, user_id
+
     - changeSet:
-        id: 6
+        id: 6 # add "attributes" table
+        author: admin
+        changes:
+          - createTable:
+              tableName: attributes
+              columns:
+                - column:
+                    name: attribute_id
+                    type: BIGINT
+                    autoIncrement: true
+                    constraints:
+                      primaryKey: true
+                - column:
+                    name: name
+                    type: VARCHAR(100)
+                    constraints:
+                      nullable: false
+                - column:
+                    name: unit
+                    type: VARCHAR(50)
+                - column:
+                    name: category_id
+                    type: BIGINT
+                - column:
+                    name: created_at
+                    type: TIMESTAMP
+                    defaultValueComputed: CURRENT_TIMESTAMP
+                - column:
+                    name: updated_at
+                    type: TIMESTAMP
+                    defaultValueComputed: CURRENT_TIMESTAMP
+                - column:
+                    name: created_by
+                    type: BIGINT
+                - column:
+                    name: updated_by
+                    type: BIGINT
+                - column:
+                    name: is_deleted
+                    type: BOOLEAN
+                    defaultValueBoolean: false
+                    constraints:
+                      nullable: false
+          - createIndex:
+              tableName: attributes
+              indexName: idx_attributes_category_id
+              columns:
+                - column:
+                    name: category_id
+
+    - changeSet:
+        id: 7 # add "product_attributes" table
         author: admin
         changes:
           - createTable:
@@ -222,12 +332,89 @@
                       constraints:
                         nullable: false
                   - column:
-                      name: attribute_name
-                      type: VARCHAR(100)
+                      name: attribute_id
+                      type: BIGINT
                       constraints:
                         nullable: false
                   - column:
-                      name: attribute_price
-                      type: DECIMAL(10,2)
+                      name: attribute_value
+                      type: VARCHAR(50)
+                  - column:
+                      name: is_deleted
+                      type: BOOLEAN
+                      defaultValueBoolean: false
+                      constraints:
+                        nullable: false
+
+    - changeSet:
+        id: 8 # add "product_variants" table
+        author: admin
+        changes:
+          - createTable:
+              tableName: product_variants
+              columns:
+                - column:
+                    name: product_variant_id
+                    type: BIGINT
+                    autoIncrement: true
+                    constraints:
+                      primaryKey: true
+                - column:
+                    name: product_id
+                    type: BIGINT
+                    constraints:
+                      nullable: false
+                - column:
+                    name: name
+                    type: VARCHAR(200)
+                    constraints:
+                      nullable: false
+                - column:
+                    name: sku
+                    type: VARCHAR(50)
+                    constraints:
+                      unique: true
+                - column:
+                    name: attributes
+                    type: JSONB
+                    constraints:
+                      nullable: false
+                - column:
+                    name: price
+                    type: DECIMAL(10,2)
+                    constraints:
+                      nullable: false
+                - column:
+                    name: stock_quantity
+                    type: INT
+                    constraints:
+                      nullable: false
+                      defaultValue: 0
+                - column:
+                    name: is_active
+                    type: BOOLEAN
+                    constraints:
+                      nullable: false
+                      defaultValueBoolean: true
+                - column:
+                    name: is_deleted
+                    type: BOOLEAN
+                    defaultValueBoolean: false
+                    constraints:
+                      nullable: false
+                - column:
+                    name: created_at
+                    type: TIMESTAMP
+                    defaultValueComputed: CURRENT_TIMESTAMP
+                - column:
+                    name: updated_at
+                    type: TIMESTAMP
+                    defaultValueComputed: CURRENT_TIMESTAMP
+                - column:
+                    name: created_by
+                    type: BIGINT
+                - column:
+                    name: updated_by
+                    type: BIGINT
     - include:
         file: db/migration/product_changelog_add_fks.yaml
