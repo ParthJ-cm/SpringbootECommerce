@@ -58,8 +58,8 @@ public class ProductService {
         if (productDTO.getAttributes() != null && !productDTO.getAttributes().isEmpty()) {
             for (AttributeDTO attributeDTO : productDTO.getAttributes()) {
                 ProductAttribute attribute = new ProductAttribute();
-                attribute.setAttributeName(attributeDTO.getAttributeName());
-                attribute.setAttributePrice(attributeDTO.getAttributePrice());
+//                attribute.setAttributeName(attributeDTO.getAttributeName());
+//                attribute.setAttributePrice(attributeDTO.getAttributePrice());
                 attribute.setProduct(savedProduct); // now it's persistent!
                 savedProduct.getAttributes().add(attribute);
             }
@@ -80,7 +80,7 @@ public class ProductService {
         product.setStockQuantity(productDTO.getStockQuantity() != null ? productDTO.getStockQuantity() : product.getStockQuantity());
         product.setSku(productDTO.getSku());
         product.setImageUrl(productDTO.getImageUrl());
-        product.setVendorId(productDTO.getVendorId());
+//        product.setVendorId(productDTO.getVendorId());
         product.setIsActive(productDTO.getIsActive() != null ? productDTO.getIsActive() : product.getIsActive());
         product.setUpdatedBy(productDTO.getUpdatedBy());
         product.setUpdatedAt(LocalDateTime.now());
@@ -101,8 +101,8 @@ public class ProductService {
         if (productDTO.getAttributes() != null && !productDTO.getAttributes().isEmpty()) {
             for (AttributeDTO attributeDTO : productDTO.getAttributes()) {
                 ProductAttribute attribute = new ProductAttribute();
-                attribute.setAttributeName(attributeDTO.getAttributeName());
-                attribute.setAttributePrice(attributeDTO.getAttributePrice());
+//                attribute.setAttributeName(attributeDTO.getAttributeName());
+//                attribute.setAttributePrice(attributeDTO.getAttributePrice());
                 attribute.setProduct(savedProduct); // attach managed product
                 savedProduct.getAttributes().add(attribute);
             }
@@ -145,9 +145,9 @@ public class ProductService {
         dto.setCategoryIds(product.getCategories().stream()
                 .map(Category::getCategoryId)
                 .collect(Collectors.toList()));
-        dto.setAttributes(product.getAttributes().stream()
-                .map(attribute -> new AttributeDTO(attribute.getAttributeName(), attribute.getAttributePrice()))
-                .collect(Collectors.toList()));
+//        dto.setAttributes(product.getAttributes().stream()
+//                .map(attribute -> new AttributeDTO(attribute.getAttributeName(), attribute.getAttributePrice()))
+//                .collect(Collectors.toList()));
         return dto;
     }
 }

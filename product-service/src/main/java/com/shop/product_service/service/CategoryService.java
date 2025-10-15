@@ -33,7 +33,7 @@ public class CategoryService {
                 .orElseThrow(() -> new RuntimeException("Category not found"));
         category.setName(categoryDTO.getName());
         category.setDescription(categoryDTO.getDescription());
-        category.setParentId(categoryDTO.getParentId());
+//        category.setParentId(categoryDTO.getParentId());
         category.setUpdatedAt(LocalDateTime.now());
         category.setUpdatedBy(categoryDTO.getUpdatedBy());
         Category updatedCategory = categoryRepository.save(category);

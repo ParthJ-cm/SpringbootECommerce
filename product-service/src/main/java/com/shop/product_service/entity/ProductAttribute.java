@@ -1,15 +1,14 @@
 package com.shop.product_service.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
-import java.math.BigDecimal;
+
 
 @Entity
 @Table(name = "product_attributes")
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 public class ProductAttribute {
@@ -17,13 +16,17 @@ public class ProductAttribute {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long productAttributeId;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "product_id", nullable = false)
     private Product product;
 
-    @Column(name = "attribute_name", nullable = false)
-    private String attributeName;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "attribute_id", nullable = false)
+    private Attribute attribute;
 
-    @Column(name = "attribute_price")
-    private BigDecimal attributePrice;
+    @Column(length = 50)
+    private String attributeValue;
+
+    @Column(nullable = false)
+    private Boolean isDeleted = false;
 }

@@ -3,29 +3,33 @@ package com.shop.product_service.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
-
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
-@Table(name = "categories")
+@Table(name = "attributes")
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class Category {
+public class Attribute {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long categoryId;
+    private Long attributeId;
 
     @Column(nullable = false, length = 100)
     private String name;
 
-    @Column(columnDefinition = "TEXT")
-    private String description;
+    @Column(length = 50)
+    private String unit;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "parent_id")
-    private Category parent;
+    @JoinColumn(name = "category_id")
+    private Category category;
+
+    @OneToMany(mappedBy = "attribute", cascade = CascadeType.ALL)
+    private List<ProductAttribute> productAttributes;
 
     @Column(name = "created_at")
     private LocalDateTime createdAt;
@@ -34,7 +38,6 @@ public class Category {
     private LocalDateTime updatedAt;
 
     private Long createdBy;
-
     private Long updatedBy;
 
     @Column(nullable = false)
