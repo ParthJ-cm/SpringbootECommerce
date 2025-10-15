@@ -3,6 +3,7 @@ databaseChangeLog:
       id: 3
       author: admin
       changes:
+        # FK "cart_id" in "cart_item" table
         - addForeignKeyConstraint:
             constraintName: fk_cart_items_cart_id
             baseTableName: cart_item
