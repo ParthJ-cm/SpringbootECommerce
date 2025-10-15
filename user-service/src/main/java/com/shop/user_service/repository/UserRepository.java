@@ -1,6 +1,7 @@
 package com.shop.user_service.repository;
 
 import com.shop.user_service.Entity.User;
+import com.shop.user_service.type.AuthProviderType;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -11,4 +12,6 @@ public interface UserRepository extends JpaRepository<User,Long> {
     Optional<User> findByEmail(String email);
 
     User getUserById(Long userId);
+    Optional<User> findByProviderIdAndProviderType(String providerId, AuthProviderType prividerType);
+
 }

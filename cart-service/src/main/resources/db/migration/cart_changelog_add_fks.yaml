@@ -3,10 +3,11 @@ databaseChangeLog:
       id: 3
       author: admin
       changes:
+        # FK "cart_id" in "cart_item" table
         - addForeignKeyConstraint:
             constraintName: fk_cart_items_cart_id
-            baseTableName: Cart_Items
+            baseTableName: cart_item
             baseColumnNames: cart_id
-            referencedTableName: Carts
+            referencedTableName: cart
             referencedColumnNames: cart_id
             onDelete: CASCADE

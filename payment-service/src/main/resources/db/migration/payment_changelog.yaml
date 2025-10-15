@@ -1,10 +1,10 @@
   databaseChangeLog:
     - changeSet:
-        id: 1
+        id: 1 # add "payments" table
         author: admin
         changes:
           - createTable:
-              tableName: Payments
+              tableName: payments
               columns:
                 - column:
                     name: payment_id
@@ -17,13 +17,11 @@
                     type: BIGINT
                     constraints:
                       nullable: false
-                      # No FK to Orders (in order_db)
                 - column:
                     name: user_id
                     type: BIGINT
                     constraints:
                       nullable: false
-                      # No FK to Users (in user_db)
                 - column:
                     name: amount
                     type: DECIMAL(10,2)
@@ -60,23 +58,23 @@
                     name: updated_by
                     type: BIGINT
           - createIndex:
-              tableName: Payments
+              tableName: payments
               indexName: idx_payments_order_id
               columns:
                 - column:
                     name: order_id
           - createIndex:
-              tableName: Payments
+              tableName: payments
               indexName: idx_payments_user_id
               columns:
                 - column:
                     name: user_id
           - createIndex:
-              tableName: Payments
+              tableName: payments
               indexName: idx_payments_status
               columns:
                 - column:
                     name: status
           - addUniqueConstraint:
-              tableName: Payments
+              tableName: payments
               columnNames: order_id

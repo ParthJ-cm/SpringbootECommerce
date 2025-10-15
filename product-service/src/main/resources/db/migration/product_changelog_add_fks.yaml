@@ -1,23 +1,74 @@
 databaseChangeLog:
   - changeSet:
-        id: 5
+        id: 9
         author: admin
         changes:
+          # FK "brand_id" in "products" table
+          - addForeignKeyConstraint:
+                constraintName: fk_product_brand_id
+                baseTableName: products
+                baseColumnNames: brand_id
+                referencedTableName: brands
+                referencedColumnNames: brand_id
+                onDelete: CASCADE
+          # PK "product_categories_pkey" in "product_categories" table
           - addPrimaryKey:
-              tableName: Product_Categories
+              tableName: product_categories
               columnNames: product_id, category_id
-              constraintName: Product_Categories_pkey
+              constraintName: product_categories_pkey
+          # FK "product_id" in "product_categories" table
           - addForeignKeyConstraint:
               constraintName: fk_product_categories_product_id
-              baseTableName: Product_Categories
+              baseTableName: product_categories
               baseColumnNames: product_id
-              referencedTableName: Products
+              referencedTableName: products
               referencedColumnNames: product_id
               onDelete: CASCADE
+          # FK "category_id" in "product_categories" table
           - addForeignKeyConstraint:
               constraintName: fk_product_categories_category_id
-              baseTableName: Product_Categories
+              baseTableName: product_categories
               baseColumnNames: category_id
-              referencedTableName: Categories
+              referencedTableName: categories
               referencedColumnNames: category_id
+              onDelete: CASCADE
+          # FK "product_id" in "reviews" table
+          - addForeignKeyConstraint:
+              constraintName: fk_reviews_product_id
+              baseTableName: reviews
+              baseColumnNames: product_id
+              referencedTableName: products
+              referencedColumnNames: product_id
+              onDelete: CASCADE
+          # FK "category_id" in "attributes" table
+          - addForeignKeyConstraint:
+              constraintName: fk_attributes_category_id
+              baseTableName: attributes
+              baseColumnNames: category_id
+              referencedTableName: categories
+              referencedColumnNames: category_id
+              onDelete: CASCADE
+          # FK "product_id" in "product_attributes" table
+          - addForeignKeyConstraint:
+              constraintName: fk_product_attributes_product_id
+              baseTableName: product_attributes
+              baseColumnNames: product_id
+              referencedTableName: products
+              referencedColumnNames: product_id
+              onDelete: CASCADE
+          # FK "attribute_id" in "product_attributes" table
+          - addForeignKeyConstraint:
+              constraintName: fk_product_attributes_attribute_id
+              baseTableName: product_attributes
+              baseColumnNames: attribute_id
+              referencedTableName: attributes
+              referencedColumnNames: attribute_id
+              onDelete: CASCADE
+          # FK "product_id" in "product_variants" table
+          - addForeignKeyConstraint:
+              constraintName: fk_product_variants_product_id
+              baseTableName: product_variants
+              baseColumnNames: product_id
+              referencedTableName: products
+              referencedColumnNames: product_id
               onDelete: CASCADE

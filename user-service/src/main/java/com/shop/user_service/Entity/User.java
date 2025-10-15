@@ -1,6 +1,7 @@
 package com.shop.user_service.Entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.shop.user_service.type.AuthProviderType;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -21,6 +22,7 @@ import java.util.Collections;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 public class User implements UserDetails {
 
     @Id
@@ -35,16 +37,21 @@ public class User implements UserDetails {
     private String email;
 
     @JsonIgnore // ✅ hides password in API responses
-    @NotBlank(message = "Password is required")
+    @Column(nullable = true)
     private String password;
 
     @Transient // ✅ not stored in DB
-    @NotBlank(message = "ConfirmPassword is required")
     private String confirmPassword;
 
     private String role;
     private String address;
     private String phoneNo;
+
+    // 🆕 Add provider fields for OAuth2 tracking
+    private String provider;     // e.g., "google"
+    private String providerId;   // Google user ID (sub)
+    @Enumerated(EnumType.STRING)
+    private AuthProviderType providerType;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -54,6 +61,6 @@ public class User implements UserDetails {
 
     @Override
     public String getUsername() {
-        return "";
+        return email;
     }
 }

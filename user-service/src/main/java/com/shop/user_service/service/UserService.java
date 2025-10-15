@@ -7,6 +7,7 @@ import com.shop.user_service.DTO.UserDto;
 import com.shop.user_service.Entity.User;
 import com.shop.user_service.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -20,6 +21,7 @@ import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class UserService {
 
 
@@ -29,7 +31,6 @@ public class UserService {
 
     private final AuthenticationManager authenticationManager;
     private final JWTService jwtService;
-    private final UserRepository userRepo;
     private PasswordEncoder encoder;
 
     public UserDto registerUser(RegistrationRequest registrationRequest) {
@@ -60,31 +61,17 @@ public class UserService {
     }
 
     public User getUserById(Long userId) {
-        return userRepo.findById(userId).orElseThrow();
+        return repository.findById(userId).orElseThrow();
 
     }
 
-    public LoginResponseDto refreshToken(String refreshToken){
+    public LoginResponseDto refreshToken(String refreshToken) {
         Long userId = jwtService.generateUserIdFromToken(refreshToken);
-        User user = userRepo.getUserById(userId);
+        User user = repository.getUserById(userId);
 
         String accessToken = jwtService.createToken(user);
-        return  new LoginResponseDto(user.getId(),accessToken,refreshToken);
+        return new LoginResponseDto(user.getId(), accessToken, refreshToken);
 
     }
-
-    public User findOrCreateUser(String email, String name) {
-        Optional<User> existingUser = repository.findByEmail(email);
-        if (existingUser.isPresent()) {
-            return existingUser.get();
-        }
-        User newUser = new User();
-        newUser.setEmail(email);
-        newUser.setName(name);
-        newUser.setPassword(passwordEncoder.encode("oauth2-default-password")); // Optional, can be null
-        newUser.setRole("USER");
-        return repository.save(newUser);
-    }
-
 
 }

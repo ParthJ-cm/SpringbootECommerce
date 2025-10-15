@@ -24,7 +24,7 @@ public class CartMapper {
     public CartItemDTO toCartItemDto(CartItem cartItem) {
         if (cartItem == null) return null;
         return new CartItemDTO(
-                cartItem.getId(),
+                cartItem.getCartItemId(),
                 cartItem.getCart() != null ? cartItem.getCart().getId() : null,
 //                cartItem.getProduct() != null ? cartItem.getProduct().getId() : null, // Map productId
                 cartItem.getQuantity(),

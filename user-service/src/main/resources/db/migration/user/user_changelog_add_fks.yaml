@@ -3,17 +3,19 @@
         id: 4
         author: admin
         changes:
+          # FK "user_id" in "wishlists" table
           - addForeignKeyConstraint:
               constraintName: fk_wishlists_user_id
-              baseTableName: Wishlists
+              baseTableName: wishlists
               baseColumnNames: user_id
-              referencedTableName: Users
+              referencedTableName: users
               referencedColumnNames: user_id
               onDelete: CASCADE
+          # FK "wishlist_id" in "wishlist_items" table
           - addForeignKeyConstraint:
               constraintName: fk_wishlist_items_wishlist_id
-              baseTableName: Wishlist_Items
+              baseTableName: wishlist_items
               baseColumnNames: wishlist_id
-              referencedTableName: Wishlists
+              referencedTableName: wishlists
               referencedColumnNames: wishlist_id
               onDelete: CASCADE

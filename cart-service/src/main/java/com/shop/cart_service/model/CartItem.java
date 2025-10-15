@@ -16,21 +16,21 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @Entity
 @Builder
-@Table(name = "Cart_Items", schema = "public")
+@Table(name = "cart_item", schema = "public")
 public class CartItem {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    private long cartItemId;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "cartId", nullable = false)
     @JsonBackReference
     private Cart cart;
 
-//    @ManyToOne(fetch = FetchType.LAZY)
-//    @JoinColumn(name = "productId", nullable = false)
-//    private Products product;
+    private Long productId;
+
+    private Long productAttributeId;
 
     @Min(value = 0, message = "Quantity must be non-negative")
     private BigDecimal quantity;
