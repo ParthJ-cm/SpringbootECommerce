@@ -416,5 +416,3 @@
                 - column:
                     name: updated_by
                     type: BIGINT
-    - include:
-        file: db/migration/product_changelog_add_fks.yaml

@@ -16,7 +16,7 @@ spring:
         dialect: org.hibernate.dialect.PostgreSQLDialect
 
   liquibase:
-    change-log: classpath:db/migration/product_changelog.yaml
+    change-log: classpath:db/migration/changelog_master.yaml
 
 server:
   port: 8082
