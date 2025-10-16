@@ -43,4 +43,7 @@ public class Category {
 
     @Column(nullable = false)
     private Boolean isDeleted = false;
+
+    @Column(nullable = false)
+    private Boolean isLeaf = true;
 }

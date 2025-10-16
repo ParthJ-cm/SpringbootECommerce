@@ -3,3 +3,5 @@ databaseChangeLog:
       file: db/migration/001_product_changelog.yaml
   - include:
       file: db/migration/002_product_changelog_add_fks.yaml
+  - include:
+      file: db/migration/003_categories_add_column_isleaf.yaml
