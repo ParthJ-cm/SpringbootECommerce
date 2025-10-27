@@ -1,68 +1,93 @@
 package com.shop.cart_service.service;
 
 import com.shop.cart_service.dto.CartDTO;
-import com.shop.cart_service.dto.CartMapper;
-import com.shop.cart_service.model.CartItem;
+import com.shop.cart_service.dto.CartItemDTO;
+import com.shop.cart_service.entity.Cart;
+import com.shop.cart_service.entity.CartItem;
 import com.shop.cart_service.repository.CartRepository;
-import lombok.AllArgsConstructor;
+import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
-@AllArgsConstructor
 public class CartService {
 
-    private final CartRepository cartRepository;
-    private final CartMapper cartMapper;
+    @Autowired
+    private CartRepository cartRepository;
 
-    public Optional<CartDTO> getCartById(Long id) {
-        return cartRepository.findCartWithItemsById(id)
-                .map(cartMapper::toDto);
+    @Autowired
+    private ModelMapper modelMapper;
+
+    public CartDTO getCartByUserId(Long userId) {
+        Cart cart = cartRepository.findByUserId(userId)
+                .orElseGet(() -> {
+                    Cart newCart = new Cart();
+                    newCart.setUserId(userId);
+                    newCart.setCreatedAt(LocalDateTime.now());
+                    newCart.setUpdatedAt(LocalDateTime.now());
+                    return cartRepository.save(newCart);
+                });
+        return mapToDTO(cart);
     }
 
-    public List<CartDTO> getAllCarts() {
-        return cartRepository.findAllCartsWithItems()
-                .stream()
-                .map(cartMapper::toDto)
-                .collect(Collectors.toList());
+    public CartDTO addItemToCart(Long userId, CartItemDTO cartItemDTO) {
+        Cart cart = cartRepository.findByUserId(userId)
+                .orElseGet(() -> {
+                    Cart newCart = new Cart();
+                    newCart.setUserId(userId);
+                    newCart.setCreatedAt(LocalDateTime.now());
+                    newCart.setUpdatedAt(LocalDateTime.now());
+                    return cartRepository.save(newCart);
+                });
+
+        CartItem cartItem = new CartItem();
+        cartItem.setCart(cart);
+        cartItem.setProductVariantId(cartItemDTO.getProductVariantId());
+        cartItem.setQuantity(cartItemDTO.getQuantity() != null ? cartItemDTO.getQuantity() : 1);
+
+        cart.getCartItems().add(cartItem);
+        cart.setUpdatedAt(LocalDateTime.now());
+        Cart updatedCart = cartRepository.save(cart);
+
+        return mapToDTO(updatedCart);
     }
 
-    public boolean deleteCart(Long id) {
-        return cartRepository.findById(id)
-                .map(cart -> {
-                    cartRepository.delete(cart);
-                    return true;
-                })
-                .orElse(false);
+    public CartDTO updateItemQuantity(Long userId, Long productVariantId, Integer quantity) {
+        Cart cart = cartRepository.findByUserId(userId)
+                .orElseThrow(() -> new RuntimeException("Cart not found for user: " + userId));
+
+        CartItem cartItem = cart.getCartItems().stream()
+                .filter(item -> item.getProductVariantId().equals(productVariantId))
+                .findFirst()
+                .orElseThrow(() -> new RuntimeException("Cart item not found for product variant: " + productVariantId));
+
+        cartItem.setQuantity(quantity);
+        cart.setUpdatedAt(LocalDateTime.now());
+        Cart updatedCart = cartRepository.save(cart);
+
+        return mapToDTO(updatedCart);
     }
 
-    public Optional<CartDTO> updateCart(Long id, CartDTO cartDTO) {
-        return cartRepository.findById(id)
-                .map(cart -> {
-                    // Update user if provided (uncomment and adjust if needed)
-//                     cart.setUser(cartDTO.getUserId() != null ? new User(cartDTO.getUserId()) : cart.getUser());
-                    cart.setUpdatedAt(LocalDateTime.now());
-                    // Update cartItems (replace all items)
-                     cart.getCartItems().clear(); // Uncomment if you want to replace all items
-                    if (cartDTO.getCartItems() != null) {
-                        cartDTO.getCartItems().forEach(itemDTO -> {
-                            CartItem item = new CartItem();
-                            item.setCart(cart); // Set the Cart relationship
-                            // item.setProduct(new Product(itemDTO.getProductId())); // Uncomment if needed
-                            item.setQuantity(itemDTO.getQuantity());
-                            item.setCreatedBy(itemDTO.getCreatedBy());
-                            item.setUpdatedBy(itemDTO.getUpdatedBy());
-                            item.setCreatedAt(itemDTO.getCreatedAt() != null ? itemDTO.getCreatedAt() : LocalDateTime.now());
-                            item.setUpdatedAt(LocalDateTime.now());
-                            cart.getCartItems().add(item); // Add the new CartItem to the Cart
-                        });
-                    }
-                    return cartRepository.save(cart);
-                })
-                .map(cartMapper::toDto);
+    public CartDTO removeItemFromCart(Long userId, Long productVariantId) {
+        Cart cart = cartRepository.findByUserId(userId)
+                .orElseThrow(() -> new RuntimeException("Cart not found for user: " + userId));
+
+        cart.getCartItems().removeIf(item -> item.getProductVariantId().equals(productVariantId));
+        cart.setUpdatedAt(LocalDateTime.now());
+        Cart updatedCart = cartRepository.save(cart);
+
+        return mapToDTO(updatedCart);
+    }
+
+    private CartDTO mapToDTO(Cart cart) {
+        CartDTO dto = modelMapper.map(cart, CartDTO.class);
+        dto.setCartItems(cart.getCartItems().stream()
+                .map(item -> modelMapper.map(item, CartItemDTO.class))
+                .collect(Collectors.toList()));
+        return dto;
     }
 }

@@ -1,46 +1,40 @@
 package com.shop.cart_service.controller;
 
 import com.shop.cart_service.dto.CartDTO;
-import com.shop.cart_service.model.Cart;
+import com.shop.cart_service.dto.CartItemDTO;
 import com.shop.cart_service.service.CartService;
-import lombok.AllArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-
 @RestController
 @RequestMapping("/cart")
-@AllArgsConstructor
-@CrossOrigin(origins = "http://localhost:5174") // Allow requests from React frontend
 public class CartController {
 
-    private final CartService cartService;
+    @Autowired
+    private CartService cartService;
 
-    @GetMapping("/getCartItem/{id}")
-    public ResponseEntity<CartDTO> getCartById(@PathVariable Long id) {
-        return cartService.getCartById(id)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+    @GetMapping("/user/{userId}")
+    public ResponseEntity<CartDTO> getCartByUserId(@PathVariable Long userId) {
+        CartDTO cartDTO = cartService.getCartByUserId(userId);
+        return ResponseEntity.ok(cartDTO);
     }
 
-    @GetMapping("/getAllCartItems")
-    public ResponseEntity<List<CartDTO>> getAllCarts() {
-        return ResponseEntity.ok(cartService.getAllCarts());
+    @PostMapping("/user/{userId}/items")
+    public ResponseEntity<CartDTO> addItemToCart(@PathVariable Long userId, @RequestBody CartItemDTO cartItemDTO) {
+        CartDTO updatedCart = cartService.addItemToCart(userId, cartItemDTO);
+        return ResponseEntity.ok(updatedCart);
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<CartDTO> updateCart(@PathVariable Long id, @RequestBody CartDTO cartDTO) {
-        return cartService.updateCart(id, cartDTO)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+    @PutMapping("/user/{userId}/items/{productVariantId}")
+    public ResponseEntity<CartDTO> updateItemQuantity(@PathVariable Long userId, @PathVariable Long productVariantId, @RequestParam Integer quantity) {
+        CartDTO updatedCart = cartService.updateItemQuantity(userId, productVariantId, quantity);
+        return ResponseEntity.ok(updatedCart);
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteCart(@PathVariable Long id) {
-        if (cartService.deleteCart(id)) {
-            return ResponseEntity.noContent().build();
-        }
-        return ResponseEntity.notFound().build();
+    @DeleteMapping("/user/{userId}/items/{productVariantId}")
+    public ResponseEntity<CartDTO> removeItemFromCart(@PathVariable Long userId, @PathVariable Long productVariantId) {
+        CartDTO updatedCart = cartService.removeItemFromCart(userId, productVariantId);
+        return ResponseEntity.ok(updatedCart);
     }
 }

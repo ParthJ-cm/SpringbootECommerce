@@ -3,14 +3,14 @@ spring:
     name: CART-SERVICE
 
   datasource:
-    url: jdbc:postgresql://localhost:5432/cart_db
+    url: jdbc:postgresql://192.168.0.65:5432/cart_db
     username: postgres
     password: postgresql
     driver-class-name: org.postgresql.Driver
 
   jpa:
     hibernate:
-      ddl-auto: none
+      ddl-auto: validate
     properties:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
@@ -23,11 +23,11 @@ server:
   servlet:
     context-path: /api/v1
 
-eureka:
-  client:
-    service-url:
-      defaultZone: http://localhost:8761/eureka
-    register-with-eureka: true   # Register this service with Eureka
-    fetch-registry: true
-  instance:
-    prefer-ip-address: true
+#eureka:
+#  client:
+#    service-url:
+#      defaultZone: http://localhost:8761/eureka
+#    register-with-eureka: true   # Register this service with Eureka
+#    fetch-registry: true
+#  instance:
+#    prefer-ip-address: true
