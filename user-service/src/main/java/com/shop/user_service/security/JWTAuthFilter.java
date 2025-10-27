@@ -30,38 +30,25 @@ public class JWTAuthFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
-        // Skip JWT authentication for OAuth2 and login-related paths
-        String path = request.getRequestURI();
-        if (path.startsWith("/oauth2/") || path.startsWith("/login/")) {
-            filterChain.doFilter(request, response);
-            return;
-        }
-
         final String requestTokenHeader = request.getHeader("Authorization");
         if (requestTokenHeader == null || !requestTokenHeader.startsWith("Bearer ")) {
             filterChain.doFilter(request, response);
             return;
         }
-
         String token = requestTokenHeader.substring(7); // Remove "Bearer " prefix
         try {
-
-
             Long userId = jwtService.generateUserIdFromToken(token);
             if (userId == null) {
                 log.warn("Unable to extract userId from token: {}", token);
                 filterChain.doFilter(request, response);
                 return;
             }
-
-            // Retrieve user (use findById with optional handling)
             User user = userRepository.findById(userId).orElse(null);
             if (user == null) {
                 log.warn("User not found for userId: {}", userId);
                 filterChain.doFilter(request, response);
                 return;
             }
-
             // Set authorities based on user's role (assuming User has a getRole() method)
             SimpleGrantedAuthority authority = new SimpleGrantedAuthority("ROLE_" + user.getRole().toUpperCase());
             UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
