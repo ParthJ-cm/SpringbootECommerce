@@ -5,13 +5,11 @@ import com.shop.cart_service.dto.CartItemDTO;
 import com.shop.cart_service.entity.Cart;
 import com.shop.cart_service.entity.CartItem;
 import com.shop.cart_service.repository.CartRepository;
-import org.modelmapper.ModelMapper;
+import com.shop.cart_service.util.mapper.CartMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class CartService {
@@ -20,7 +18,7 @@ public class CartService {
     private CartRepository cartRepository;
 
     @Autowired
-    private ModelMapper modelMapper;
+    private CartMapper cartMapper;
 
     public CartDTO getCartByUserId(Long userId) {
         Cart cart = cartRepository.findByUserId(userId)
@@ -31,7 +29,7 @@ public class CartService {
                     newCart.setUpdatedAt(LocalDateTime.now());
                     return cartRepository.save(newCart);
                 });
-        return mapToDTO(cart);
+        return cartMapper.toDto(cart);
     }
 
     public CartDTO addItemToCart(Long userId, CartItemDTO cartItemDTO) {
@@ -53,7 +51,7 @@ public class CartService {
         cart.setUpdatedAt(LocalDateTime.now());
         Cart updatedCart = cartRepository.save(cart);
 
-        return mapToDTO(updatedCart);
+        return cartMapper.toDto(updatedCart);
     }
 
     public CartDTO updateItemQuantity(Long userId, Long productVariantId, Integer quantity) {
@@ -69,7 +67,7 @@ public class CartService {
         cart.setUpdatedAt(LocalDateTime.now());
         Cart updatedCart = cartRepository.save(cart);
 
-        return mapToDTO(updatedCart);
+        return cartMapper.toDto(updatedCart);
     }
 
     public CartDTO removeItemFromCart(Long userId, Long productVariantId) {
@@ -80,14 +78,6 @@ public class CartService {
         cart.setUpdatedAt(LocalDateTime.now());
         Cart updatedCart = cartRepository.save(cart);
 
-        return mapToDTO(updatedCart);
-    }
-
-    private CartDTO mapToDTO(Cart cart) {
-        CartDTO dto = modelMapper.map(cart, CartDTO.class);
-        dto.setCartItems(cart.getCartItems().stream()
-                .map(item -> modelMapper.map(item, CartItemDTO.class))
-                .collect(Collectors.toList()));
-        return dto;
+        return cartMapper.toDto(updatedCart);
     }
 }
