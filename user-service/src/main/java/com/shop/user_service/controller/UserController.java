@@ -1,26 +1,13 @@
 package com.shop.user_service.controller;
 
-import com.shop.user_service.DTO.LoginDto;
-import com.shop.user_service.DTO.LoginResponseDto;
-import com.shop.user_service.DTO.RegistrationRequest;
-import com.shop.user_service.DTO.UserDto;
-import com.shop.user_service.Entity.User;
+import com.shop.user_service.DTO.*;
 import com.shop.user_service.service.JWTService;
 import com.shop.user_service.service.UserService;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.security.oauth2.core.user.OAuth2User;
-
-import java.io.IOException;
-import java.util.Arrays;
-import java.util.Map;
 
 @RestController
 @RequestMapping("/auth")
@@ -33,7 +20,6 @@ public class UserController {
     @PostMapping("/signUp")
     public ResponseEntity<UserDto> signUp(@Valid @RequestBody RegistrationRequest registrationRequest){
         return new ResponseEntity<>(service.registerUser(registrationRequest), HttpStatus.CREATED);
-        
     }
 
     @PostMapping("/logIn")
@@ -48,5 +34,37 @@ public class UserController {
        return ResponseEntity.ok(loginResponseDto);
     }
 
+    @PostMapping("/forgot-password")
+    public ResponseEntity<StandardResponse<String>> forgotPassword(@RequestBody @Valid ForgotPasswordDto request) {
+        System.out.println("print" + request.getEmail());
+        service.forgotPassword(request.getEmail());
+        StandardResponse<String> response = new StandardResponse<>(200,
+        null,
+        "Password reset link sent to your email.",
+        null
+        );
+        return ResponseEntity.ok(response);
+    }
 
+    @PostMapping("/reset-password")
+    public ResponseEntity<StandardResponse<String>> resetPassword(@RequestBody @Valid ResetPasswordRequest request) {
+        service.resetPassword(request.getToken(), request.getNewPassword());
+        StandardResponse<String> response = new StandardResponse<>(200,
+                null,
+                "Password has been successfully reset.",
+                null
+        );
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/validate-reset-token")
+    public ResponseEntity<StandardResponse<String>> validateResetToken(@RequestParam String token) {
+        service.validateResetToken(token);
+        StandardResponse<String> response = new StandardResponse<>(200,
+                null,
+                "Reset token is valid",
+                null
+        );
+        return ResponseEntity.ok(response);
+    }
 }

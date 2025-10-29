@@ -1,0 +1,9 @@
+databaseChangeLog:
+  - include:
+      file: db/migration/user/001-create-tbl-users-wishlist-wishlist_items.yaml
+
+  - include:
+      file: db/migration/user/002-update-tbl-wishlist-wishlist_items.yaml
+
+  - include:
+      file: db/migration/user/100-update-tbl-users.yaml
