@@ -5,12 +5,19 @@ public final class MessageConstants {
         throw new UnsupportedOperationException("This is a utility class and cannot be instantiated");
     }
 
-    public static final class Brand{
-        private Brand(){
-            throw new UnsupportedOperationException();
+    public static String build(CommonMessageTemplate template, Object... args) {
+        try {
+            return template.format(args);
+        } catch (Exception e) {
+            return "Invalid message format for template: " + template.name();
         }
-
-        public static final String EXISTS = "Brand with name '%s' already exists.";
     }
 
+    public static String exists(String entity, String name){
+        return build(CommonMessageTemplate.EXISTS, entity, name);
+    }
+
+    public static String notFound(String entity, Long id){
+        return build(CommonMessageTemplate.NOT_FOUND, entity, id);
+    }
 }

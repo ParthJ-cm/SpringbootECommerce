@@ -1,19 +1,24 @@
 package com.shop.product_service.controller;
 
 import com.shop.product_service.dto.ProductDTO;
+import com.shop.product_service.dto.ReviewDTO;
+import com.shop.product_service.dto.SaveReviewDTO;
 import com.shop.product_service.service.ProductService;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.shop.product_service.service.interfaces.ReviewService;
+import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/products")
+@RequestMapping("/products")
+@RequiredArgsConstructor
 public class ProductController {
 
-    @Autowired
     private ProductService productService;
+    private final ReviewService reviewService;
 
     @PostMapping
     public ResponseEntity<ProductDTO> createProduct(@RequestBody ProductDTO productDTO) {
@@ -49,5 +54,11 @@ public class ProductController {
     public ResponseEntity<List<ProductDTO>> getProductsByCategoryId(@PathVariable Long categoryId) {
         List<ProductDTO> products = productService.getProductsByCategoryId(categoryId);
         return ResponseEntity.ok(products);
+    }
+
+    @PostMapping("/review")
+    public ResponseEntity<ReviewDTO> saveReview(@Valid @RequestBody SaveReviewDTO saveReviewDTO){
+        ReviewDTO reviewDTO = reviewService.save(saveReviewDTO);
+        return ResponseEntity.ok(reviewDTO);
     }
 }

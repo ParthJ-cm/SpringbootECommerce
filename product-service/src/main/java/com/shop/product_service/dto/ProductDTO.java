@@ -18,10 +18,8 @@ public class ProductDTO {
     private Integer stockQuantity;
     private String sku;
     private String imageUrl;
-    private Long vendorId;
     private Boolean isActive;
-    private Long createdBy;
-    private Long updatedBy;
-    private List<Long> categoryIds;
     private List<AttributeDTO> attributes;
+    private List<ProductVariantDTO> productVariants;
+    private List<ReviewDTO> reviews;
 }

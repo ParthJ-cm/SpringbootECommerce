@@ -45,13 +45,13 @@ public class ProductService {
             }
         }
 
-        if (productDTO.getCategoryIds() != null) {
-            for (Long categoryId : productDTO.getCategoryIds()) {
-                Category category = categoryRepository.findById(categoryId)
-                        .orElseThrow(() -> new RuntimeException("Category not found with id: " + categoryId));
-                product.getCategories().add(category);
-            }
-        }
+//        if (productDTO.getCategoryIds() != null) {
+//            for (Long categoryId : productDTO.getCategoryIds()) {
+//                Category category = categoryRepository.findById(categoryId)
+//                        .orElseThrow(() -> new RuntimeException("Category not found with id: " + categoryId));
+//                product.getCategories().add(category);
+//            }
+//        }
 
         Product savedProduct = productRepository.save(product);
 
@@ -82,17 +82,17 @@ public class ProductService {
         product.setImageUrl(productDTO.getImageUrl());
 //        product.setVendorId(productDTO.getVendorId());
         product.setIsActive(productDTO.getIsActive() != null ? productDTO.getIsActive() : product.getIsActive());
-        product.setUpdatedBy(productDTO.getUpdatedBy());
+//        product.setUpdatedBy(productDTO.getUpdatedBy());
         product.setUpdatedAt(LocalDateTime.now());
 
         product.getCategories().clear();
-        if (productDTO.getCategoryIds() != null) {
-            for (Long categoryId : productDTO.getCategoryIds()) {
-                Category category = categoryRepository.findById(categoryId)
-                        .orElseThrow(() -> new RuntimeException("Category not found with id: " + categoryId));
-                product.getCategories().add(category);
-            }
-        }
+//        if (productDTO.getCategoryIds() != null) {
+//            for (Long categoryId : productDTO.getCategoryIds()) {
+//                Category category = categoryRepository.findById(categoryId)
+//                        .orElseThrow(() -> new RuntimeException("Category not found with id: " + categoryId));
+//                product.getCategories().add(category);
+//            }
+//        }
 
         Product savedProduct = productRepository.save(product);
 
@@ -142,9 +142,9 @@ public class ProductService {
 
     private ProductDTO mapToDTO(Product product) {
         ProductDTO dto = modelMapper.map(product, ProductDTO.class);
-        dto.setCategoryIds(product.getCategories().stream()
-                .map(Category::getCategoryId)
-                .collect(Collectors.toList()));
+//        dto.setCategoryIds(product.getCategories().stream()
+//                .map(Category::getCategoryId)
+//                .collect(Collectors.toList()));
 //        dto.setAttributes(product.getAttributes().stream()
 //                .map(attribute -> new AttributeDTO(attribute.getAttributeName(), attribute.getAttributePrice()))
 //                .collect(Collectors.toList()));
