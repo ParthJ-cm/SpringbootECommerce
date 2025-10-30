@@ -10,15 +10,14 @@ import java.util.List;
 
 @Entity
 @Table(name = "attributes")
-@Getter
-@Setter
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
 public class Attribute {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long attributeId;
+    private Long id;
 
     @Column(nullable = false, length = 100)
     private String name;
@@ -31,7 +30,7 @@ public class Attribute {
     private Category category;
 
     @OneToMany(mappedBy = "attribute", cascade = CascadeType.ALL)
-    private List<ProductAttribute> productAttributes;
+    private List<VariantAttributes> variantAttributes;
 
     @Column(name = "created_at")
     @CreationTimestamp

@@ -7,9 +7,9 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class CategoryDTO {
+public class ReviewDTO {
     private Long id;
-    private String name;
-    private String description;
-    private Long parentId;
+    private Long userId;
+    private Integer rating;
+    private String comment;
 }

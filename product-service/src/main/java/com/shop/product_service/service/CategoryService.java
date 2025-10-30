@@ -35,7 +35,7 @@ public class CategoryService {
         category.setDescription(categoryDTO.getDescription());
 //        category.setParentId(categoryDTO.getParentId());
         category.setUpdatedAt(LocalDateTime.now());
-        category.setUpdatedBy(categoryDTO.getUpdatedBy());
+//        category.setUpdatedBy(categoryDTO.getUpdatedBy());
         Category updatedCategory = categoryRepository.save(category);
         return modelMapper.map(updatedCategory, CategoryDTO.class);
     }
