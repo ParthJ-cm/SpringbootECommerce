@@ -10,7 +10,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class BrandDTO {
-    private Long brandId;
+    private Long id;
     private String name;
     private String description;
     private String logoUrl;

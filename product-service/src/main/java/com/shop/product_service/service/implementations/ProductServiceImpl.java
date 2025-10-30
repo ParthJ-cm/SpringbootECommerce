@@ -18,8 +18,9 @@ public class ProductServiceImpl implements ProductService {
     @Override
     @Transactional
     public void deleteProductsByBrandId(Long brandId) {
-        List<Product> products = productRepository.findByBrand_BrandId(brandId);
+        List<Product> products = productRepository.findByBrand_Id(brandId);
         products.forEach(product -> product.setIsDeleted(true));
         productRepository.saveAll(products);
     }
+
 }

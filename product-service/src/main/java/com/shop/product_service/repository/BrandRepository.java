@@ -10,7 +10,7 @@ import java.util.Optional;
 
 @Repository
 public interface BrandRepository extends JpaRepository<Brand, Long> {
-    Optional<Brand> findByBrandIdAndIsDeletedFalse(Long id);
+    Optional<Brand> findByIdAndIsDeletedFalse(Long id);
     Optional<Brand> findByNameAndIsDeletedFalse(String name);
     Page<Brand> findByNameContainingIgnoreCaseAndIsDeletedFalse(String name, Pageable pageable);
 }

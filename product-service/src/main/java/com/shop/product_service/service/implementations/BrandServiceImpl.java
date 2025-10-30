@@ -1,6 +1,5 @@
 package com.shop.product_service.service.implementations;
 
-import com.shop.product_service.constants.CommonMessageTemplate;
 import com.shop.product_service.constants.EntityName;
 import com.shop.product_service.constants.MessageConstants;
 import com.shop.product_service.dto.BrandDTO;
@@ -33,7 +32,7 @@ public class BrandServiceImpl implements BrandService {
     public BrandDTO saveBrand(SaveBrandDTO saveBrandDTO) {
         //prevent same brand name
         brandRepository.findByNameAndIsDeletedFalse(saveBrandDTO.getName())
-                .filter(brand -> !Objects.equals(brand.getBrandId(), saveBrandDTO.getId()))
+                .filter(brand -> !Objects.equals(brand.getId(), saveBrandDTO.getId()))
                 .ifPresent(brand -> {
                     throw new AlreadyExistsException(
                             MessageConstants.exists(EntityName.BRAND,saveBrandDTO.getName()));
@@ -42,7 +41,7 @@ public class BrandServiceImpl implements BrandService {
         Long brandId = saveBrandDTO.getId();
         Brand brand = (brandId == null)
                 ? new Brand()
-                : brandRepository.findByBrandIdAndIsDeletedFalse(brandId)
+                : brandRepository.findByIdAndIsDeletedFalse(brandId)
                 .orElseThrow(() -> new EntityNotFoundException(
                         MessageConstants.notFound(EntityName.BRAND,brandId)));
 
@@ -54,7 +53,7 @@ public class BrandServiceImpl implements BrandService {
     @Override
     public BrandDTO getBrand(Long id) {
 
-        Brand brand = brandRepository.findByBrandIdAndIsDeletedFalse(id)
+        Brand brand = brandRepository.findByIdAndIsDeletedFalse(id)
                 .orElseThrow(() -> new EntityNotFoundException(
                         MessageConstants.notFound(EntityName.BRAND,id)));
 
@@ -64,7 +63,7 @@ public class BrandServiceImpl implements BrandService {
     @Override
     @Transactional
     public void deleteBrand(Long id) {
-        Brand brand = brandRepository.findByBrandIdAndIsDeletedFalse(id)
+        Brand brand = brandRepository.findByIdAndIsDeletedFalse(id)
                 .orElseThrow(() -> new EntityNotFoundException(
                         MessageConstants.notFound(EntityName.BRAND,id)));
 

@@ -8,6 +8,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ProductVariantDTO {
-    private Long productAttributeId;
+    private Long id;
     private String attributeValue;
 }

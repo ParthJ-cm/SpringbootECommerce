@@ -5,28 +5,24 @@ import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
-import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
 @Table(name = "products")
-@Getter
-@Setter
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
 public class Product {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long productId;
+    private Long id;
 
     @Column(nullable = false, length = 200)
     private String name;
 
     @Column(columnDefinition = "TEXT")
     private String description;
-
-    private BigDecimal price;
 
     @Column(nullable = false)
     private Integer stockQuantity = 0;
@@ -48,9 +44,6 @@ public class Product {
             inverseJoinColumns = @JoinColumn(name = "category_id")
     )
     private List<Category> categories;
-
-    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
-    private List<ProductAttribute> attributes;
 
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
     private List<ProductVariant> variants;

@@ -37,7 +37,7 @@ public class BrandController {
     }
 
     @GetMapping("/getAll")
-    public ResponseEntity<Page<BrandDTO>> getAllBrands(@RequestParam(required = false) String searchByBrandName, @PageableDefault(size = 10, sort="brandId") Pageable page){
+    public ResponseEntity<Page<BrandDTO>> getAllBrands(@RequestParam(required = false) String searchByBrandName, @PageableDefault(size = 10, sort="id") Pageable page){
         Page<BrandDTO> records = brandService.paginatedBrands(searchByBrandName, page);
         return ResponseEntity.ok(records);
     }

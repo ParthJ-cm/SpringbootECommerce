@@ -10,15 +10,14 @@ import java.util.List;
 
 @Entity
 @Table(name = "brands")
-@Getter
-@Setter
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
 public class Brand {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long brandId;
+    private Long id;
 
     @Column(nullable = false, length = 100)
     private String name;

@@ -1,32 +1,32 @@
 package com.shop.product_service.entity;
 
 import jakarta.persistence.*;
-import lombok.*;
-
-
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name = "product_attributes")
-@Getter
-@Setter
+@Table(name = "variant_attributes")
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class ProductAttribute {
+public class VariantAttributes {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long productAttributeId;
+    private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "product_id", nullable = false)
-    private Product product;
+    @JoinColumn(name = "product_variant_id", nullable = false)
+    private ProductVariant productVariant;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "attribute_id", nullable = false)
     private Attribute attribute;
 
-    @Column(length = 50)
+    @Column(length = 255)
     private String attributeValue;
 
     @Column(nullable = false)
     private Boolean isDeleted = false;
+
 }

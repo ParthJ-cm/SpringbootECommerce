@@ -28,9 +28,9 @@ public class ReviewServiceImpl implements ReviewService {
     public ReviewDTO save(SaveReviewDTO saveReviewDTO) {
         Long userId = saveReviewDTO.getUserId();
         Long productId = saveReviewDTO.getProductId();
-        Review review = reviewRepository.findByProduct_ProductIdAndUserId(productId, userId).orElseGet(Review::new);
+        Review review = reviewRepository.findByProduct_IdAndUserId(productId, userId).orElseGet(Review::new);
 
-        if(review.getReviewId() == null){
+        if(review.getId() == null){
             Product product = productRepository.findById(productId)
                     .orElseThrow(() -> new EntityNotFoundException(
                             MessageConstants.build(CommonMessageTemplate.NOT_FOUND,"Product",productId)
