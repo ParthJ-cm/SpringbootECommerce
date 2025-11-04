@@ -7,6 +7,8 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -99,10 +101,12 @@ public class User implements UserDetails {
     private String providerId;
 
     @Column(name = "created_at")
-    private LocalDateTime createdAt = LocalDateTime.now();
+    @CreationTimestamp
+    private LocalDateTime createdAt;
 
     @Column(name = "updated_at")
-    private LocalDateTime updatedAt = LocalDateTime.now();
+    @UpdateTimestamp
+    private LocalDateTime updatedAt;
 
     @Column(name = "is_active")
     private boolean isActive = true;
@@ -111,7 +115,14 @@ public class User implements UserDetails {
     private boolean isDeleted = false;
 
     @Column(name = "password_changed_at")
-    private LocalDateTime passwordChangedAt = LocalDateTime.now();
+    private LocalDateTime passwordChangedAt;
+
+    @PrePersist
+    public void prePersist() {
+        if (passwordChangedAt == null) {
+            passwordChangedAt = LocalDateTime.now();
+        }
+    }
 
     @Override
     @JsonIgnore
@@ -125,24 +136,6 @@ public class User implements UserDetails {
     @JsonIgnore
     public String getUsername() {
         return email; // using email as username for login
-    }
-
-    @Override
-    @JsonIgnore
-    public boolean isAccountNonExpired() {
-        return !isDeleted;
-    }
-
-    @Override
-    @JsonIgnore
-    public boolean isAccountNonLocked() {
-        return isActive;
-    }
-
-    @Override
-    @JsonIgnore
-    public boolean isCredentialsNonExpired() {
-        return !isDeleted;
     }
 
     @Override

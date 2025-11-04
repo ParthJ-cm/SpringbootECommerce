@@ -1,3 +1,8 @@
+server:
+  port: 8082
+  servlet:
+    context-path: /
+
 spring:
   application:
     name: PRODUCT-SERVICE
@@ -18,16 +23,11 @@ spring:
   liquibase:
     change-log: classpath:db/migration/changelog_master.yaml
 
-server:
-  port: 8082
-  servlet:
-    context-path: /api/v1
-
 eureka:
   client:
     service-url:
       defaultZone: http://localhost:8761/eureka
-    register-with-eureka: true   # Register this service with Eureka
+    register-with-eureka: true
     fetch-registry: true
   instance:
     prefer-ip-address: true

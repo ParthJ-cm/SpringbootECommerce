@@ -36,13 +36,7 @@ public class WebSecurityConfig {
                         auth
                                 .requestMatchers(
                                         "/auth/**",
-                                        "/logIn/**",
-                                        "/oauth2/**",
-                                        "/signUp",
-                                        "/error",
-                                        "/forgot-password",
-                                        "/reset-password",
-                                        "/validate-reset-token"
+                                        "/oauth2/**"
                                 ).permitAll()
                                 .anyRequest().authenticated()
                 )

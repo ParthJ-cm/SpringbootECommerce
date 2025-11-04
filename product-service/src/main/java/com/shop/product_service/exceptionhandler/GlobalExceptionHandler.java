@@ -7,7 +7,7 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-
+import org.springframework.security.access.AccessDeniedException;
 import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -19,6 +19,12 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ApiError> handleBaseException (BaseException ex){
         ApiError apiError = new ApiError(ex.getMessage(), ex.getStatus());
         return new ResponseEntity<>(apiError, apiError.getStatus());
+    }
+
+    @ExceptionHandler(AccessDeniedException.class)
+    public ResponseEntity<ApiError> handleAccessDeniedException(AccessDeniedException exception){
+        ApiError apiError = new ApiError("You are not authorized to access the resource", HttpStatus.FORBIDDEN);
+        return new ResponseEntity<>(apiError, HttpStatus.FORBIDDEN);
     }
 
     @ExceptionHandler(Exception.class)

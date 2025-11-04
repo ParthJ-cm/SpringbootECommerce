@@ -49,7 +49,7 @@ public class UserService {
         return modelMapper.map(savedUser, UserDto.class);
     }
 
-    public LoginResponseDto logIn(LoginDto loginDto) {
+    public LoginResponseDto login(LoginDto loginDto) {
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(loginDto.getEmail(), loginDto.getPassword())
         );

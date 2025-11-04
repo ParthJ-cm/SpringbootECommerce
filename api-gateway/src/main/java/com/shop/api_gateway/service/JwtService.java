@@ -36,7 +36,10 @@ public class JwtService {
         return false;
     }
 
-    private Claims getClaims(String token) {
+    public Claims getClaims(String token) {
+        if (!validateToken(token)) {
+            throw new IllegalArgumentException("Invalid JWT token");
+        }
         return Jwts.parser()
                 .verifyWith(generateSecretKey())
                 .build()
@@ -44,11 +47,7 @@ public class JwtService {
                 .getPayload();
     }
 
-    public Long generateUserIdFromToken(String token) {
-        if (!validateToken(token)) {
-            throw new IllegalArgumentException("Invalid JWT token");
-        }
-        Claims claims = getClaims(token);
+    public Long validateUserIdFromClaims(Claims claims) {
         Object userIdObj = claims.get("userId"); // userId must be included when token is generated
 
         if (userIdObj == null) {
@@ -61,5 +60,4 @@ public class JwtService {
             throw new IllegalArgumentException("Invalid userId format in token");
         }
     }
-
 }

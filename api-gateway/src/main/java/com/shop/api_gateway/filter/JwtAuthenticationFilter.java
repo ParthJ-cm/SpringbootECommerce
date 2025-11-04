@@ -2,6 +2,7 @@ package com.shop.api_gateway.filter;
 
 import com.shop.api_gateway.config.JwtProperties;
 import com.shop.api_gateway.service.JwtService;
+import io.jsonwebtoken.Claims;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cloud.gateway.filter.GatewayFilterChain;
 import org.springframework.cloud.gateway.filter.GlobalFilter;
@@ -34,10 +35,15 @@ public class JwtAuthenticationFilter implements GlobalFilter, Ordered {
         }
         String token = authHeader.substring(7);
         try {
-            Long userId = jwtService.generateUserIdFromToken(token);
+            Claims claims = jwtService.getClaims(token);
+            Long userId = jwtService.validateUserIdFromClaims(claims);
+            String email = claims.get("email", String.class);
+            String roles = claims.get("roles", String.class);
             ServerHttpRequest mutatedRequest = exchange.getRequest()
                     .mutate()
                     .header("X-User-Id", userId.toString())
+                    .header("X-User-Email", email)
+                    .header("X-User-Roles", roles)
                     .build();
             return chain.filter(exchange.mutate().request(mutatedRequest).build());
         }

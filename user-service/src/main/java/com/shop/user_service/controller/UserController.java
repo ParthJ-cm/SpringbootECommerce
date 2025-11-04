@@ -17,14 +17,14 @@ public class UserController {
     private final UserService service;
     private final JWTService jwtService;
 
-    @PostMapping("/signUp")
+    @PostMapping("/signup")
     public ResponseEntity<UserDto> signUp(@Valid @RequestBody RegistrationRequest registrationRequest){
         return new ResponseEntity<>(service.registerUser(registrationRequest), HttpStatus.CREATED);
     }
 
-    @PostMapping("/logIn")
+    @PostMapping("/login")
     public ResponseEntity<LoginResponseDto> login(@RequestBody LoginDto loginDto){
-        LoginResponseDto loginResponseDto = service.logIn(loginDto);
+        LoginResponseDto loginResponseDto = service.login(loginDto);
         return ResponseEntity.ok(loginResponseDto);
     }
 
@@ -36,7 +36,6 @@ public class UserController {
 
     @PostMapping("/forgot-password")
     public ResponseEntity<StandardResponse<String>> forgotPassword(@RequestBody @Valid ForgotPasswordDto request) {
-        System.out.println("print" + request.getEmail());
         service.forgotPassword(request.getEmail());
         StandardResponse<String> response = new StandardResponse<>(200,
         null,
