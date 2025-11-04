@@ -5,28 +5,34 @@ import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
-
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "categories")
-@Data
+@Table(name = "reviews",
+        uniqueConstraints = @UniqueConstraint(columnNames = {"product_id", "user_id"}))
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class Category {
+@Builder
+public class Review {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false, length = 100)
-    private String name;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "product_id", nullable = false)
+    private Product product;
+
+    @Column(nullable = false)
+    private Long userId;
+
+    @Column(nullable = false)
+    private Integer rating;
 
     @Column(columnDefinition = "TEXT")
-    private String description;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "parent_id")
-    private Category parent;
+    private String comment;
 
     @Column(name = "created_at")
     @CreationTimestamp
@@ -37,12 +43,5 @@ public class Category {
     private LocalDateTime updatedAt;
 
     private Long createdBy;
-
     private Long updatedBy;
-
-    @Column(nullable = false)
-    private Boolean isDeleted = false;
-
-    @Column(nullable = false)
-    private Boolean isLeaf = true;
 }

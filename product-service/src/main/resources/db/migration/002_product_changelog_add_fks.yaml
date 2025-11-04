@@ -72,3 +72,15 @@ databaseChangeLog:
               referencedTableName: products
               referencedColumnNames: product_id
               onDelete: CASCADE
+
+  - changeSet:
+      id: 10
+      author: admin
+      changes:
+        # FK "parent_id" in "categories" table
+        - addForeignKeyConstraint:
+            constraintName: fk_categories_parent_id
+            baseTableName: categories
+            baseColumnNames: parent_id
+            referencedTableName: categories
+            referencedColumnNames: category_id

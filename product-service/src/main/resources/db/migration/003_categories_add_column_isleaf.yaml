@@ -1,0 +1,14 @@
+databaseChangeLog:
+  - changeSet:
+      id: 11 # add "is_leaf" column to "categories" table
+      author: admin
+      changes:
+        - addColumn:
+            tableName: categories
+            columns:
+              - column:
+                  name: is_leaf
+                  type: BOOLEAN
+                  defaultValueBoolean: true
+                  constraints:
+                    nullable: false

@@ -1,0 +1,62 @@
+#refactor-product-and-variant-attributes
+databaseChangeLog:
+  - changeSet:
+      id: 12
+      author: manisha
+      changes:
+        # Remove price field from product
+        - dropColumn:
+            columnName: price
+            tableName: products
+
+        # Drop product_attribute table
+        - dropTable:
+            tableName: product_attributes
+            cascadeConstraints: true
+
+        # Add variant_attribute table
+        - createTable:
+            tableName: variant_attributes
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+              - column:
+                  name: product_variant_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_variant_attribute_variant
+                    references: product_variants(product_variant_id)
+              - column:
+                  name: attribute_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_variant_attribute_attribute
+                    references: attributes(attribute_id)
+              - column:
+                  name: attribute_value
+                  type: VARCHAR(255)
+              - column:
+                  name: is_deleted
+                  type: BOOLEAN
+                  defaultValueBoolean: false
+
+        # Add not-null constraint for category field in attribute table
+        - addNotNullConstraint:
+            tableName: attributes
+            columnName: category_id
+            columnDataType: BIGINT
+
+  - changeSet:
+      id: 13
+      author: manisha
+      changes:
+          # Remove attributes field from product_variants
+            - dropColumn:
+                columnName: attributes
+                tableName: product_variants

@@ -1,0 +1,11 @@
+databaseChangeLog:
+  - include:
+      file: db/migration/001_product_changelog.yaml
+  - include:
+      file: db/migration/002_product_changelog_add_fks.yaml
+  - include:
+      file: db/migration/003_categories_add_column_isleaf.yaml
+  - include:
+      file: db/migration/004_add_variant_attribute_table.yaml
+  - include:
+      file: db/migration/005_rename_primary_keys.yaml

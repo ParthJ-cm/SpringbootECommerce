@@ -5,28 +5,41 @@ import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
-
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "categories")
+@Table(name = "product_variants")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class Category {
+public class ProductVariant {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false, length = 100)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "product_id", nullable = false)
+    private Product product;
+
+    @Column(nullable = false, length = 200)
     private String name;
 
-    @Column(columnDefinition = "TEXT")
-    private String description;
+    @Column(unique = true, length = 50)
+    private String sku;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "parent_id")
-    private Category parent;
+    @Column(nullable = false, precision = 10, scale = 2)
+    private BigDecimal price;
+
+    @Column(nullable = false)
+    private Integer stockQuantity = 0;
+
+    @Column(nullable = false)
+    private Boolean isActive = true;
+
+    @Column(nullable = false)
+    private Boolean isDeleted = false;
 
     @Column(name = "created_at")
     @CreationTimestamp
@@ -37,12 +50,5 @@ public class Category {
     private LocalDateTime updatedAt;
 
     private Long createdBy;
-
     private Long updatedBy;
-
-    @Column(nullable = false)
-    private Boolean isDeleted = false;
-
-    @Column(nullable = false)
-    private Boolean isLeaf = true;
 }

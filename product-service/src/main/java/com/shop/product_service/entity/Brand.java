@@ -5,15 +5,16 @@ import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
-
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
-@Table(name = "categories")
+@Table(name = "brands")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class Category {
+public class Brand {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -24,9 +25,8 @@ public class Category {
     @Column(columnDefinition = "TEXT")
     private String description;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "parent_id")
-    private Category parent;
+    @Column(length = 250)
+    private String logoUrl;
 
     @Column(name = "created_at")
     @CreationTimestamp
@@ -37,12 +37,11 @@ public class Category {
     private LocalDateTime updatedAt;
 
     private Long createdBy;
-
     private Long updatedBy;
 
     @Column(nullable = false)
     private Boolean isDeleted = false;
 
-    @Column(nullable = false)
-    private Boolean isLeaf = true;
+    @OneToMany(mappedBy = "brand", cascade = CascadeType.ALL)
+    private List<Product> products;
 }
