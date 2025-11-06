@@ -30,7 +30,7 @@ public class Attribute {
     private Category category;
 
     @OneToMany(mappedBy = "attribute", cascade = CascadeType.ALL)
-    private List<VariantAttributes> variantAttributes;
+    private List<VariantAttribute> variantAttributes;
 
     @Column(name = "created_at")
     @CreationTimestamp

@@ -27,9 +27,6 @@ public class Product {
     @Column(nullable = false)
     private Integer stockQuantity = 0;
 
-    @Column(unique = true, length = 50)
-    private String sku;
-
     @Column(length = 255)
     private String imageUrl;
 
@@ -51,6 +48,7 @@ public class Product {
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
     private List<Review> reviews;
 
+    @Column
     private Boolean isActive = true;
 
     @Column(name = "created_at")

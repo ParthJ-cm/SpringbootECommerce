@@ -7,6 +7,7 @@ import org.hibernate.annotations.UpdateTimestamp;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @Table(name = "product_variants")
@@ -26,7 +27,7 @@ public class ProductVariant {
     @Column(nullable = false, length = 200)
     private String name;
 
-    @Column(unique = true, length = 50)
+    @Column(length = 50)
     private String sku;
 
     @Column(nullable = false, precision = 10, scale = 2)
@@ -35,8 +36,20 @@ public class ProductVariant {
     @Column(nullable = false)
     private Integer stockQuantity = 0;
 
+    @Column(length = 255)
+    private String imageUrl;
+
+    @Column(nullable = false)
+    private Boolean isPrimary = false;
+
     @Column(nullable = false)
     private Boolean isActive = true;
+
+    @OneToMany(mappedBy = "productVariant", cascade = CascadeType.ALL)
+    private List<VariantAttribute> variantAttributes;
+
+    @Column(nullable = false)
+    private Integer version;
 
     @Column(nullable = false)
     private Boolean isDeleted = false;
