@@ -9,3 +9,7 @@ databaseChangeLog:
       file: db/migration/004_add_variant_attribute_table.yaml
   - include:
       file: db/migration/005_rename_primary_keys.yaml
+  - include:
+      file: db/migration/006_productvariant_add_column_image.yaml
+  - include:
+      file: db/migration/007_modify_sku_and_add_version.yaml

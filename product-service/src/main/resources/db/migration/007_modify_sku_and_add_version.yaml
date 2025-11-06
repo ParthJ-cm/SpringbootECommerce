@@ -1,0 +1,36 @@
+databaseChangeLog:
+  - changeSet:
+      id: 16
+      author: manisha
+      comment: Remove unique constraint on sku, add version column, and create composite index on (sku, version)
+      changes:
+        - dropUniqueConstraint:
+            tableName: product_variants
+            constraintName: product_variants_sku_key
+
+        - addColumn:
+            tableName: product_variants
+            columns:
+              - column:
+                  name: version
+                  type: INT
+                  defaultValueNumeric: 1
+                  constraints:
+                    nullable: false
+
+        - addUniqueConstraint:
+            tableName: product_variants
+            columnNames: sku, version
+
+  - changeSet:
+      id: 17
+      author: manisha
+      comment: Remove sku column and related constraints from products table
+      changes:
+        - dropUniqueConstraint:
+            tableName: products
+            constraintName: products_sku_key
+
+        - dropColumn:
+            columnName: sku
+            tableName: products
