@@ -1,0 +1,35 @@
+databaseChangeLog:
+  - changeSet:
+      id: 14
+      author: manisha
+      changes:
+          - renameColumn:
+              tableName: attributes
+              oldColumnName: attribute_id
+              newColumnName: id
+              columnDataType: BIGINT
+          - renameColumn:
+              tableName: brands
+              oldColumnName: brand_id
+              newColumnName: id
+              columnDataType: BIGINT
+          - renameColumn:
+              tableName: categories
+              oldColumnName: category_id
+              newColumnName: id
+              columnDataType: BIGINT
+          - renameColumn:
+              tableName: products
+              oldColumnName: product_id
+              newColumnName: id
+              columnDataType: BIGINT
+          - renameColumn:
+              tableName: product_variants
+              oldColumnName: product_variant_id
+              newColumnName: id
+              columnDataType: BIGINT
+          - renameColumn:
+              tableName: reviews
+              oldColumnName: review_id
+              newColumnName: id
+              columnDataType: BIGINT

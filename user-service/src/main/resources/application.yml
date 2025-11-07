@@ -1,3 +1,8 @@
+server:
+  port: 8081
+  servlet:
+    context-path: /api/v1
+
 spring:
   application:
     name: USER-SERVICE
@@ -16,7 +21,7 @@ spring:
         dialect: org.hibernate.dialect.PostgreSQLDialect
 
   liquibase:
-    change-log: classpath:db/migration/user/user_changelog.yaml
+    change-log: classpath:db/migration/user/001-create-tbl-users-wishlist-wishlist_items.yaml
 
   security:
     oauth2:
@@ -36,15 +41,24 @@ spring:
             token-uri: https://oauth2.googleapis.com/token
             user-info-uri: https://www.googleapis.com/oauth2/v3/userinfo
             user-name-attribute: sub
-
-server:
-  port: 8081
-  servlet:
-    context-path: /api/v1
-
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: akshayharshora@gmail.com
+    password: vclh vvwx jpvj vkck
+    properties:
+      mail.smtp.auth: true
+      mail.smtp.starttls.enable: true
+      mail.smtp.starttls.required: true
+      mail.smtp.ssl.trust: smtp.gmail.com
+      mail.smtp.quitwait: false
+      mail.debug: true
+            
 jwt:
   secret: fcf874fcd1aa0350827b3f6ea78bd67bdd8d6b623f434fe6ace26382de3b3f82
-  expiration-ms: 3600000
+  access-token-expiration-ms: 3600000
+  refresh-token-expiration-ms: 1209600000
+  reset-token-expiration-ms: 900000
 
 eureka:
   client:
@@ -54,3 +68,4 @@ eureka:
     fetch-registry: true
   instance:
     prefer-ip-address: true
+
