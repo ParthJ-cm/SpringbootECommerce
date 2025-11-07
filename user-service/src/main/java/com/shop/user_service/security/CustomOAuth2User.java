@@ -1,6 +1,6 @@
 package com.shop.user_service.security;
 
-import com.shop.user_service.Entity.User;
+import com.shop.user_service.entity.User;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import org.springframework.security.core.GrantedAuthority;

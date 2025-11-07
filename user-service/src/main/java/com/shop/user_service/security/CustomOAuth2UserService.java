@@ -1,6 +1,6 @@
 package com.shop.user_service.security;
 
-import com.shop.user_service.Entity.User;
+import com.shop.user_service.entity.User;
 import com.shop.user_service.repository.UserRepository;
 import com.shop.user_service.type.AuthProviderType;
 import lombok.RequiredArgsConstructor;

@@ -1,4 +1,4 @@
-package com.shop.user_service.DTO;
+package com.shop.user_service.dto;
 
 import com.shop.user_service.type.AuthProviderType;
 import jakarta.validation.constraints.*;

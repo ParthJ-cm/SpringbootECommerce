@@ -1,14 +1,15 @@
-package com.shop.product_service.exceptionhandler;
+package com.shop.user_service.exceptionhandler;
 
-import com.shop.product_service.exceptions.BaseException;
+import com.shop.user_service.exceptions.BaseException;
 import jakarta.validation.ConstraintViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-import org.springframework.security.access.AccessDeniedException;
+
 import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -66,21 +67,21 @@ public class GlobalExceptionHandler {
         ApiError apiError = ApiError.builder()
                 .statusCode(status.value())
                 .error(status.getReasonPhrase())
-                .message("Validation failed for one or more parameters.")
+                .message("Validation failed for one or more fields.")
                 .details(errors)
                 .build();
 
         return new ResponseEntity<>(apiError, HttpStatus.BAD_REQUEST);
     }
 
-    @ExceptionHandler(AccessDeniedException.class)
-    public ResponseEntity<ApiError> handleAccessDeniedException(AccessDeniedException exception){
-        HttpStatus status = HttpStatus.FORBIDDEN;
+    @ExceptionHandler(BadCredentialsException.class)
+    public ResponseEntity<ApiError> handleBadCredentialsException(BadCredentialsException exception) {
+        HttpStatus status = HttpStatus.BAD_REQUEST;
 
         ApiError apiError = ApiError.builder()
                 .statusCode(status.value())
                 .error(status.getReasonPhrase())
-                .message("You are not authorized to access the resource.")
+                .message(exception.getMessage())
                 .build();
 
         return new ResponseEntity<>(apiError, status);

@@ -1,4 +1,4 @@
-package com.shop.product_service.exceptionhandler;
+package com.shop.user_service.exceptionhandler;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -13,7 +13,7 @@ import java.util.Map;
 @AllArgsConstructor
 @Builder
 public class ApiError {
-
+    @Builder.Default
     private LocalDateTime timeStamp = LocalDateTime.now();
     private int statusCode;
     private String error;

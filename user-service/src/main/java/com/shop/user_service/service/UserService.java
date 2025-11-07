@@ -1,12 +1,12 @@
 package com.shop.user_service.service;
 
-import com.shop.user_service.DTO.LoginDto;
-import com.shop.user_service.DTO.LoginResponseDto;
-import com.shop.user_service.DTO.RegistrationRequest;
-import com.shop.user_service.DTO.UserDto;
-import com.shop.user_service.Entity.User;
-import com.shop.user_service.error.InvalidToken;
-import com.shop.user_service.error.UserNotFoundException;
+import com.shop.user_service.dto.LoginDto;
+import com.shop.user_service.dto.LoginResponseDto;
+import com.shop.user_service.dto.RegistrationRequest;
+import com.shop.user_service.dto.UserDto;
+import com.shop.user_service.entity.User;
+import com.shop.user_service.exceptions.InvalidTokenException;
+import com.shop.user_service.exceptions.NotFoundException;
 import com.shop.user_service.repository.UserRepository;
 import io.jsonwebtoken.Claims;
 import lombok.RequiredArgsConstructor;
@@ -72,7 +72,7 @@ public class UserService {
 
     public void forgotPassword(String email) {
         User user = repository.findByEmail(email)
-                .orElseThrow(() -> new UserNotFoundException("User not found with email: " + email));
+                .orElseThrow(() -> new NotFoundException("User not found with email: " + email));
         String token = jwtService.generateResetToken(user.getEmail(), user.getPasswordChangedAt());
         String resetLink = "http://localhost:5173/reset-password?token="+token;
         emailService.sendEmail(user.getEmail(), "Password Reset Link", resetLink);
@@ -83,9 +83,9 @@ public class UserService {
         String email = claims.getSubject();
         String tokenPasswordChangedAt = claims.get("passwordChangedAt", String.class);
         User user = repository.findByEmail(email)
-                .orElseThrow(() -> new UserNotFoundException("User not found with email: " + email));
+                .orElseThrow(() -> new NotFoundException("User not found with email: " + email));
         if (user.getPasswordChangedAt().isAfter(LocalDateTime.parse(tokenPasswordChangedAt))) {
-            throw new InvalidToken("Token is invalid or expired");
+            throw new InvalidTokenException("Token is invalid or expired");
         }
         user.setPassword(passwordEncoder.encode(newPassword));
         user.setPasswordChangedAt(LocalDateTime.now()); // update timestamp
@@ -96,13 +96,13 @@ public class UserService {
         Claims claims = jwtService.getResetTokenClaims(token);
         String email = claims.getSubject();
         User user = repository.findByEmail(email)
-                .orElseThrow(() -> new InvalidToken("Token is invalid or expired"));
+                .orElseThrow(() -> new InvalidTokenException("Token is invalid or expired"));
         if (claims.getExpiration().before(new Date())) {
-            throw new InvalidToken("Token is invalid or expired");
+            throw new InvalidTokenException("Token is invalid or expired");
         }
         String tokenPasswordChangedAt = claims.get("passwordChangedAt", String.class);
         if (user.getPasswordChangedAt().isAfter(LocalDateTime.parse(tokenPasswordChangedAt))) {
-            throw new InvalidToken("Token is invalid or expired");
+            throw new InvalidTokenException("Token is invalid or expired");
         }
     }
 }

@@ -1,6 +1,6 @@
 package com.shop.user_service.security;
 
-import com.shop.user_service.error.UserNotFoundException;
+import com.shop.user_service.exceptions.NotFoundException;
 import com.shop.user_service.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -17,6 +17,6 @@ public class CustomUserDetailService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         return repository.findByEmail(email)
-                .orElseThrow(() -> new UserNotFoundException("User not found: " + email)); // Return custom User entity
+                .orElseThrow(() -> new NotFoundException("User not found: " + email)); // Return custom User entity
     }
 }

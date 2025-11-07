@@ -1,7 +1,7 @@
 package com.shop.user_service.service;
 
-import com.shop.user_service.Entity.User;
-import com.shop.user_service.error.InvalidToken;
+import com.shop.user_service.entity.User;
+import com.shop.user_service.exceptions.InvalidTokenException;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.JwtException;
@@ -22,13 +22,13 @@ public class JWTService {
     private String jwtSecret;
 
     @Value("${jwt.access-token-expiration-ms}")
-    private long JWT_ACCESS_TOKEN_EXPIRES_IN;
+    private long jwtAccessTokenExpiresIn;
 
     @Value("${jwt.refresh-token-expiration-ms}")
-    private long JWT_REFRESH_TOKEN_EXPIRES_IN;
+    private long jwtRefreshTokenExpiresIn;
 
     @Value("${jwt.reset-token-expiration-ms}")
-    private long JWT_RESET_TOKEN_EXPIRES_IN;
+    private long jwtResetTokenExpiresIn;
 
     private SecretKey generateSecretKey(){
         return Keys.hmacShaKeyFor(jwtSecret.getBytes(StandardCharsets.UTF_8));
@@ -41,7 +41,7 @@ public class JWTService {
                 .claim("roles",user.getRole())
                 .claim("userId", user.getUserId())
                 .issuedAt(new Date())
-                .expiration(new Date(System.currentTimeMillis() + JWT_ACCESS_TOKEN_EXPIRES_IN))
+                .expiration(new Date(System.currentTimeMillis() + jwtAccessTokenExpiresIn))
                 .signWith(generateSecretKey())
                 .compact();
     }
@@ -58,7 +58,7 @@ public class JWTService {
         return Jwts.builder()
                 .subject(user.getUserId().toString())
                 .issuedAt(new Date())
-                .expiration(new Date(System.currentTimeMillis()+ JWT_REFRESH_TOKEN_EXPIRES_IN)) //here we have to set it for long time 6 months
+                .expiration(new Date(System.currentTimeMillis()+ jwtRefreshTokenExpiresIn)) //here we have to set it for long time 6 months
                 .signWith(generateSecretKey())
                 .compact();
     }
@@ -68,7 +68,7 @@ public class JWTService {
                 .subject(email)
                 .claim("passwordChangedAt", passwordChangedAt.toString())
                 .issuedAt(new Date(System.currentTimeMillis()))
-                .expiration(new Date(System.currentTimeMillis() + JWT_RESET_TOKEN_EXPIRES_IN)) // 15 min expiry
+                .expiration(new Date(System.currentTimeMillis() + jwtResetTokenExpiresIn)) // 15 min expiry
                 .signWith(generateSecretKey())
                 .compact();
     }
@@ -82,9 +82,9 @@ public class JWTService {
                     .getPayload();
         }
         catch (ExpiredJwtException e) {
-            throw new InvalidToken("Reset token expired");
+            throw new InvalidTokenException("Reset token expired");
         } catch (JwtException e) {
-            throw new InvalidToken("Invalid reset token");
+            throw new InvalidTokenException("Invalid reset token");
         }
     }
 

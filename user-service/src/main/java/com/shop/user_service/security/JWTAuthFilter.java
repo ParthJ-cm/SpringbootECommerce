@@ -1,6 +1,6 @@
 package com.shop.user_service.security;
 
-import com.shop.user_service.Entity.User;
+import com.shop.user_service.entity.User;
 import com.shop.user_service.repository.UserRepository;
 import com.shop.user_service.service.JWTService;
 import jakarta.servlet.FilterChain;
@@ -49,7 +49,7 @@ public class JWTAuthFilter extends OncePerRequestFilter {
                 filterChain.doFilter(request, response);
                 return;
             }
-            // Set authorities based on user's role (assuming User has a getRole() method)
+            // Set authorities based on user's role
             SimpleGrantedAuthority authority = new SimpleGrantedAuthority("ROLE_" + user.getRole().toUpperCase());
             UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
                     user, null, Collections.singletonList(authority));

@@ -1,4 +1,4 @@
-package com.shop.user_service.Entity;
+package com.shop.user_service.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.shop.user_service.type.AuthProviderType;

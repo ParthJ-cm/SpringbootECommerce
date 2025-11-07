@@ -1,6 +1,6 @@
 package com.shop.user_service.controller;
 
-import com.shop.user_service.DTO.*;
+import com.shop.user_service.dto.*;
 import com.shop.user_service.service.JWTService;
 import com.shop.user_service.service.UserService;
 import jakarta.validation.Valid;
@@ -23,7 +23,7 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<LoginResponseDto> login(@RequestBody LoginDto loginDto){
+    public ResponseEntity<LoginResponseDto> login(@Valid @RequestBody LoginDto loginDto){
         LoginResponseDto loginResponseDto = service.login(loginDto);
         return ResponseEntity.ok(loginResponseDto);
     }
