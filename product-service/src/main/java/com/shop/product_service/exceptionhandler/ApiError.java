@@ -13,7 +13,7 @@ import java.util.Map;
 @AllArgsConstructor
 @Builder
 public class ApiError {
-
+    @Builder.Default
     private LocalDateTime timeStamp = LocalDateTime.now();
     private int statusCode;
     private String error;

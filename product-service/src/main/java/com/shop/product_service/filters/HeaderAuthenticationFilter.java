@@ -1,12 +1,16 @@
 package com.shop.product_service.filters;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.shop.product_service.context.UserContext;
 import com.shop.product_service.context.UserContextHolder;
+import com.shop.product_service.exceptionhandler.ApiError;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -24,6 +28,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class HeaderAuthenticationFilter extends OncePerRequestFilter {
     private final UserContextHolder userContextHolder;
+    private final ObjectMapper objectMapper;
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         String userIdHeader = request.getHeader("X-User-Id");
@@ -55,6 +60,19 @@ public class HeaderAuthenticationFilter extends OncePerRequestFilter {
                 userContextHolder.clear();
                 SecurityContextHolder.clearContext();
             }
+        }
+        else {
+            HttpStatus status = HttpStatus.UNAUTHORIZED;
+
+            ApiError apiError = ApiError.builder()
+                    .statusCode(status.value())
+                    .error(status.getReasonPhrase())
+                    .message("You are not authorized to access the resource.")
+                    .build();
+
+            response.setStatus(status.value());
+            response.setContentType(MediaType.APPLICATION_JSON_VALUE);
+            objectMapper.writeValue(response.getWriter(), apiError);
         }
     }
 }
