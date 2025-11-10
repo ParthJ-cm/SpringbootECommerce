@@ -9,6 +9,8 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.security.access.AccessDeniedException;
+import org.springframework.web.method.annotation.HandlerMethodValidationException;
+
 import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -85,6 +87,33 @@ public class GlobalExceptionHandler {
 
         return new ResponseEntity<>(apiError, status);
     }
+
+    @ExceptionHandler(HandlerMethodValidationException.class)
+    public ResponseEntity<ApiError> handleHandlerMethodValidationException(HandlerMethodValidationException ex) {
+        HttpStatus status = HttpStatus.BAD_REQUEST;
+
+        Map<String, String> fieldErrors = ex.getAllErrors().stream()
+                .collect(Collectors.toMap(
+                        err -> err.getCodes() != null && err.getCodes().length > 0
+                                ? err.getCodes()[0]
+                                : "Unknown",
+                        err -> err.getDefaultMessage() == null
+                                ? "Validation error"
+                                : err.getDefaultMessage(),
+                        (a, b) -> a + "; " + b
+                ));
+
+        ApiError apiError = ApiError.builder()
+                .statusCode(status.value())
+                .error(status.getReasonPhrase())
+                .message("Validation failed for one or more fields.")
+                .details(fieldErrors)
+                .build();
+
+        return new ResponseEntity<>(apiError, status);
+    }
+
+
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ApiError> handleGenericException(Exception exception){

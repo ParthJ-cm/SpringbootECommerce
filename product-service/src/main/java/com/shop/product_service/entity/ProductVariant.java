@@ -7,6 +7,7 @@ import org.hibernate.annotations.UpdateTimestamp;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -45,11 +46,11 @@ public class ProductVariant {
     @Column(nullable = false)
     private Boolean isActive = true;
 
-    @OneToMany(mappedBy = "productVariant", cascade = CascadeType.ALL)
-    private List<VariantAttribute> variantAttributes;
+    @OneToMany(mappedBy = "productVariant", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<VariantAttribute> variantAttributes = new ArrayList<>();
 
     @Column(nullable = false)
-    private Integer version;
+    private Integer version = 1;
 
     @Column(nullable = false)
     private Boolean isDeleted = false;

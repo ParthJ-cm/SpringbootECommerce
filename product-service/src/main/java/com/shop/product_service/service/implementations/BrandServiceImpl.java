@@ -35,7 +35,7 @@ public class BrandServiceImpl implements BrandService {
                 .filter(brand -> !Objects.equals(brand.getId(), saveBrandDTO.getId()))
                 .ifPresent(brand -> {
                     throw new AlreadyExistsException(
-                            MessageConstants.exists(EntityName.BRAND,saveBrandDTO.getName()));
+                            MessageConstants.exists(EntityName.BRAND,"name",saveBrandDTO.getName()));
                 });
 
         Long brandId = saveBrandDTO.getId();

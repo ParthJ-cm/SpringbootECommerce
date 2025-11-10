@@ -1,6 +1,6 @@
 package com.shop.product_service.repository;
 
-import com.shop.product_service.entity.Category;
+import com.shop.product_service.entity.Attribute;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -9,8 +9,9 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface CategoryRepository extends JpaRepository<Category, Long> {
+public interface AttributeRepository extends JpaRepository<Attribute, Long> {
 
-    @Query("Select c.id FROM Category c WHERE c.id IN :ids")
+    @Query("SELECT a.id FROM Attribute a WHERE a.id IN :ids AND a.isDeleted = false")
     List<Long> findExistingIds(@Param("ids") List<Long> ids);
+
 }

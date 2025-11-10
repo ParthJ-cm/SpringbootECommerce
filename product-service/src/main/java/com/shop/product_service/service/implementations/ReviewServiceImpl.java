@@ -1,6 +1,6 @@
 package com.shop.product_service.service.implementations;
 
-import com.shop.product_service.constants.CommonMessageTemplate;
+import com.shop.product_service.constants.EntityName;
 import com.shop.product_service.constants.MessageConstants;
 import com.shop.product_service.dto.ReviewDTO;
 import com.shop.product_service.dto.SaveReviewDTO;
@@ -31,14 +31,16 @@ public class ReviewServiceImpl implements ReviewService {
         Review review = reviewRepository.findByProduct_IdAndUserId(productId, userId).orElseGet(Review::new);
 
         if(review.getId() == null){
-            Product product = productRepository.findById(productId)
-                    .orElseThrow(() -> new EntityNotFoundException(
-                            MessageConstants.build(CommonMessageTemplate.NOT_FOUND,"Product",productId)
-            ));
-            review.setProduct(product);
+            if (!productRepository.existsById(productId)) {
+                throw new EntityNotFoundException(
+                        MessageConstants.notFound(EntityName.PRODUCT, productId)
+                );
+            }
+            Product productRef = productRepository.getReferenceById(productId);
+            review.setProduct(productRef);
         }
-        modelMapper.map(saveReviewDTO, review);
 
+        modelMapper.map(saveReviewDTO, review);
         Review savedReview = reviewRepository.save(review);
         return modelMapper.map(savedReview, ReviewDTO.class);
     }
