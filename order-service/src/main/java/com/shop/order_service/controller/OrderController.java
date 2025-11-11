@@ -1,8 +1,10 @@
 package com.shop.order_service.controller;
 
 import com.shop.order_service.dto.OrderDTO;
-import com.shop.order_service.model.OrderStatus;
-import com.shop.order_service.service.OrderService;
+import com.shop.order_service.dto.SaveOrderDTO;
+import com.shop.order_service.entity.OrderStatus;
+import com.shop.order_service.service.implementations.OrderServiceImpl;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,7 +19,7 @@ import java.util.List;
 @CrossOrigin(origins = "http://localhost:5174")
 public class OrderController {
 
-    private final OrderService orderService;
+    private final OrderServiceImpl orderService;
 
     // Get all orders
     @GetMapping
@@ -37,22 +39,28 @@ public class OrderController {
         return ResponseEntity.ok(orderService.getOrdersByUser(userId));
     }
 
+    // Get all orders by status
+    @GetMapping("/status/{status}")
+    public ResponseEntity<List<OrderDTO>> getOrdersByStatus(@PathVariable OrderStatus status) {
+        return ResponseEntity.ok(orderService.getOrdersByStatus(status));
+    }
+
     // Create new order
     @PostMapping
-    public ResponseEntity<OrderDTO> createOrder(@RequestBody OrderDTO orderDTO) {
-        OrderDTO createdOrder = orderService.createOrder(orderDTO);
+    public ResponseEntity<OrderDTO> createOrder(@Valid @RequestBody SaveOrderDTO saveOrderDTO) {
+        OrderDTO createdOrder = orderService.createOrder(saveOrderDTO);
         return ResponseEntity.status(HttpStatus.CREATED).body(createdOrder);
     }
 
-    // Update entire order (e.g., amount, status, etc.)
-    @PutMapping("/{orderId}")
-    public ResponseEntity<OrderDTO> updateOrder(
-            @PathVariable Long orderId,
-            @RequestBody OrderDTO orderDTO) {
-        return ResponseEntity.ok(orderService.updateOrder(orderId, orderDTO));
-    }
+//    // Update order (status)
+//    @PutMapping("/{orderId}")
+//    public ResponseEntity<OrderDTO> updateOrder(
+//            @PathVariable Long orderId,
+//            @RequestBody OrderDTO orderDTO) {
+//        return ResponseEntity.ok(orderService.updateOrder(orderId, orderDTO));
+//    }
 
-    // Update only the order status
+    // Update the order status
     @PatchMapping("/{orderId}/status")
     public ResponseEntity<OrderDTO> updateOrderStatus(
             @PathVariable Long orderId,
@@ -60,18 +68,19 @@ public class OrderController {
         return ResponseEntity.ok(orderService.updateOrderStatus(orderId, status));
     }
 
-    // Soft delete (cancel) an order
-    @DeleteMapping("/{orderId}")
-    public ResponseEntity<Void> deleteOrder(@PathVariable Long orderId) {
-        orderService.deleteOrder(orderId);
-        return ResponseEntity.noContent().build();
+    // Cancel the order
+    @PatchMapping("/{orderId}/cancel")
+    public ResponseEntity<OrderDTO> cancelOrder(
+            @PathVariable Long orderId) {
+        return ResponseEntity.ok(orderService.cancelOrder(orderId));
     }
 
-    // Get all orders by status
-    @GetMapping("/status/{status}")
-    public ResponseEntity<List<OrderDTO>> getOrdersByStatus(@PathVariable OrderStatus status) {
-        return ResponseEntity.ok(orderService.getOrdersByStatus(status));
-    }
+//    // Soft delete (cancel) an order
+//    @DeleteMapping("/{orderId}")
+//    public ResponseEntity<Void> deleteOrder(@PathVariable Long orderId) {
+//        orderService.deleteOrder(orderId);
+//        return ResponseEntity.noContent().build();
+//    }
 
     // Get recent orders (last N days)
     @GetMapping("/recent")

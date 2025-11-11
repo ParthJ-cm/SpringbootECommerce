@@ -5,7 +5,7 @@ spring:
   datasource:
     url: jdbc:postgresql://localhost:5432/order_db
     username: postgres
-    password: postgresql
+    password: Tatva@123
     driver-class-name: org.postgresql.Driver
 
   jpa:
@@ -17,6 +17,22 @@ spring:
 
   liquibase:
     change-log: classpath:db/migration/order_changelog.yaml
+
+  kafka:
+    bootstrap-servers: localhost:9092
+    consumer:
+      group-id: order-service-group
+      auto-offset-reset: earliest
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+      properties:
+        spring.json.trusted.packages: "com.shop.order-service.dto,java.util"
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.apache.kafka.common.serialization.StringSerializer
+    listener:
+      missing-topics-fatal: false
+
 
 server:
   port: 8085
@@ -31,3 +47,4 @@ eureka:
     fetch-registry: true
   instance:
     prefer-ip-address: true
+
